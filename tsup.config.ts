@@ -15,5 +15,9 @@ export default defineConfig({
   external: ["react", "react-dom", "recharts", "react-hook-form", "@tanstack/react-table"],
   // O CSS é copiado cru: o Tailwind v4 do app consumidor precisa processar o
   // @theme, então não pode vir pré-compilado.
-  onSuccess: "cp src/styles/index.css dist/styles.css && cp -r src/styles dist/styles",
+  // O CSS vai para a RAIZ do dist, e não para dist/styles/: o dist/styles.css é
+  // o index.css copiado, e ele importa as outras seis como "./tokens.css". Com
+  // `cp -r src/styles dist/styles` elas caíam em dist/styles/styles/ e nenhum
+  // dos sete imports resolvia — `@import "@voga/ui/styles.css"` entrava vazio.
+  onSuccess: "cp src/styles/*.css dist/ && cp src/styles/index.css dist/styles.css",
 });

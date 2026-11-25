@@ -502,7 +502,13 @@ function Combobox({
     )
   ] });
 }
-function Calendar({ className, classNames, ...props }) {
+function Calendar({
+  className,
+  classNames,
+  prevMonthLabel = "M\xEAs anterior",
+  nextMonthLabel = "Pr\xF3ximo m\xEAs",
+  ...props
+}) {
   return /* @__PURE__ */ jsx(
     DayPicker,
     {
@@ -524,8 +530,8 @@ function Calendar({ className, classNames, ...props }) {
         ...classNames
       },
       components: {
-        PreviousMonthButton: (buttonProps) => /* @__PURE__ */ jsx(Button, { ...buttonProps, variant: "ghost", size: "sm", icon: ChevronLeft, iconOnly: true, "aria-label": "M\xEAs anterior" }),
-        NextMonthButton: (buttonProps) => /* @__PURE__ */ jsx(Button, { ...buttonProps, variant: "ghost", size: "sm", icon: ChevronRight, iconOnly: true, "aria-label": "Pr\xF3ximo m\xEAs" }),
+        PreviousMonthButton: (buttonProps) => /* @__PURE__ */ jsx(Button, { ...buttonProps, variant: "ghost", size: "sm", icon: ChevronLeft, iconOnly: true, "aria-label": prevMonthLabel }),
+        NextMonthButton: (buttonProps) => /* @__PURE__ */ jsx(Button, { ...buttonProps, variant: "ghost", size: "sm", icon: ChevronRight, iconOnly: true, "aria-label": nextMonthLabel }),
         // As setas já vêm dos nossos botões; o chevron do pacote fica vazio.
         Chevron: () => /* @__PURE__ */ jsx(Fragment, {})
       },
@@ -785,7 +791,16 @@ function Steps({ className, total, done, running, label = "Progresso", ...props 
     }
   );
 }
-function Carousel({ className, options, arrows = true, label = "Carrossel", children, ...props }) {
+function Carousel({
+  className,
+  options,
+  arrows = true,
+  label = "Carrossel",
+  prevLabel = "Anterior",
+  nextLabel = "Pr\xF3ximo",
+  children,
+  ...props
+}) {
   const [ref, embla] = useEmblaCarousel({ align: "start", containScroll: "trimSnaps", ...options });
   const [canPrev, setCanPrev] = React11.useState(false);
   const [canNext, setCanNext] = React11.useState(false);
@@ -821,7 +836,7 @@ function Carousel({ className, options, arrows = true, label = "Carrossel", chil
               size: "sm",
               icon: ChevronLeft,
               iconOnly: true,
-              "aria-label": "Anterior",
+              "aria-label": prevLabel,
               className: "voga-carousel__arrow voga-carousel__arrow--prev",
               onClick: () => embla?.scrollPrev()
             }
@@ -833,7 +848,7 @@ function Carousel({ className, options, arrows = true, label = "Carrossel", chil
               size: "sm",
               icon: ChevronRight,
               iconOnly: true,
-              "aria-label": "Pr\xF3ximo",
+              "aria-label": nextLabel,
               className: "voga-carousel__arrow voga-carousel__arrow--next",
               onClick: () => embla?.scrollNext()
             }
@@ -980,7 +995,7 @@ function MenubarSeparator({
 var Dialog = DialogPrimitive2.Root;
 var DialogTrigger = DialogPrimitive2.Trigger;
 var DialogClose = DialogPrimitive2.Close;
-var DialogContent = React11.forwardRef(function DialogContent2({ className, children, showClose = true, ...props }, ref) {
+var DialogContent = React11.forwardRef(function DialogContent2({ className, children, showClose = true, closeLabel = "Fechar", ...props }, ref) {
   return /* @__PURE__ */ jsxs(DialogPrimitive2.Portal, { children: [
     /* @__PURE__ */ jsx(DialogPrimitive2.Overlay, { className: "voga-scrim" }),
     /* @__PURE__ */ jsxs(DialogPrimitive2.Content, { ref, className: cn("voga-dialog", className), ...props, children: [
@@ -992,7 +1007,7 @@ var DialogContent = React11.forwardRef(function DialogContent2({ className, chil
           size: "sm",
           icon: X,
           iconOnly: true,
-          "aria-label": "Fechar",
+          "aria-label": closeLabel,
           className: "voga-dialog__close"
         }
       ) }) : null
@@ -1036,12 +1051,12 @@ var AlertDialogDescription = React11.forwardRef(function AlertDialogDescription2
 var Sheet = DialogPrimitive2.Root;
 var SheetTrigger = DialogPrimitive2.Trigger;
 var SheetClose = DialogPrimitive2.Close;
-var SheetContent = React11.forwardRef(function SheetContent2({ className, children, side = "right", showClose = true, ...props }, ref) {
+var SheetContent = React11.forwardRef(function SheetContent2({ className, children, side = "right", showClose = true, closeLabel = "Fechar", ...props }, ref) {
   return /* @__PURE__ */ jsxs(DialogPrimitive2.Portal, { children: [
     /* @__PURE__ */ jsx(DialogPrimitive2.Overlay, { className: "voga-scrim" }),
     /* @__PURE__ */ jsxs(DialogPrimitive2.Content, { ref, "data-side": side, className: cn("voga-sheet", className), ...props, children: [
       children,
-      showClose ? /* @__PURE__ */ jsx(DialogPrimitive2.Close, { asChild: true, children: /* @__PURE__ */ jsx(Button, { variant: "ghost", size: "sm", icon: X, iconOnly: true, "aria-label": "Fechar", className: "voga-sheet__close" }) }) : null
+      showClose ? /* @__PURE__ */ jsx(DialogPrimitive2.Close, { asChild: true, children: /* @__PURE__ */ jsx(Button, { variant: "ghost", size: "sm", icon: X, iconOnly: true, "aria-label": closeLabel, className: "voga-sheet__close" }) }) : null
     ] })
   ] });
 });

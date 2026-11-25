@@ -16,8 +16,13 @@ export const SheetContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
     side?: "right" | "left" | "top" | "bottom";
     showClose?: boolean;
+    /** O nome acessível do X. Traduza-o. */
+    closeLabel?: string;
   }
->(function SheetContent({ className, children, side = "right", showClose = true, ...props }, ref) {
+>(function SheetContent(
+  { className, children, side = "right", showClose = true, closeLabel = "Fechar", ...props },
+  ref,
+) {
   return (
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay className="voga-scrim" />
@@ -25,7 +30,7 @@ export const SheetContent = React.forwardRef<
         {children}
         {showClose ? (
           <DialogPrimitive.Close asChild>
-            <Button variant="ghost" size="sm" icon={X} iconOnly aria-label="Fechar" className="voga-sheet__close" />
+            <Button variant="ghost" size="sm" icon={X} iconOnly aria-label={closeLabel} className="voga-sheet__close" />
           </DialogPrimitive.Close>
         ) : null}
       </DialogPrimitive.Content>

@@ -13,8 +13,13 @@ export const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
     /** `false` tira o X do canto — então feche pelo rodapé. */
     showClose?: boolean;
+    /**
+     * O nome acessível do X. Traduza-o: num app que não fala português o
+     * leitor de tela anunciaria "Fechar" no meio de uma tela em outra língua.
+     */
+    closeLabel?: string;
   }
->(function DialogContent({ className, children, showClose = true, ...props }, ref) {
+>(function DialogContent({ className, children, showClose = true, closeLabel = "Fechar", ...props }, ref) {
   return (
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay className="voga-scrim" />
@@ -27,7 +32,7 @@ export const DialogContent = React.forwardRef<
               size="sm"
               icon={X}
               iconOnly
-              aria-label="Fechar"
+              aria-label={closeLabel}
               className="voga-dialog__close"
             />
           </DialogPrimitive.Close>

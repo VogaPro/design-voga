@@ -267,12 +267,20 @@ interface ComboboxProps {
  */
 declare function Combobox({ options, value, onChange, placeholder, searchPlaceholder, emptyText, disabled, id, className, }: ComboboxProps): React.JSX.Element;
 
-type CalendarProps = React.ComponentProps<typeof DayPicker>;
+type CalendarProps = React.ComponentProps<typeof DayPicker> & {
+    /**
+     * Nomes acessíveis das setas de mês. Traduza-os — e passe também `locale`
+     * (do react-day-picker), que por padrão é pt-BR: os dois juntos é que fazem
+     * o calendário falar a língua do app.
+     */
+    prevMonthLabel?: string;
+    nextMonthLabel?: string;
+};
 /**
  * Calendário. 280px, com a folga do menu — então os dias dos cantos ficam
  * concêntricos com a caixa. O dia escolhido é tinta; hoje é um anel.
  */
-declare function Calendar({ className, classNames, ...props }: CalendarProps): React.JSX.Element;
+declare function Calendar({ className, classNames, prevMonthLabel, nextMonthLabel, ...props }: CalendarProps): React.JSX.Element;
 
 interface DatePickerProps {
     value?: Date;
@@ -468,12 +476,15 @@ interface CarouselProps extends React.ComponentPropsWithoutRef<"div"> {
     /** `false` esconde as setas — então deixe claro que arrasta. */
     arrows?: boolean;
     label?: string;
+    /** Nomes acessíveis das setas. Traduza-os. */
+    prevLabel?: string;
+    nextLabel?: string;
 }
 /**
  * Uma fileira que desliza item por item. As setas flutuam nas bordas e a
  * fileira some sob elas — só do lado onde ainda há coisa para ver.
  */
-declare function Carousel({ className, options, arrows, label, children, ...props }: CarouselProps): React.JSX.Element;
+declare function Carousel({ className, options, arrows, label, prevLabel, nextLabel, children, ...props }: CarouselProps): React.JSX.Element;
 declare function CarouselSlide({ className, ...props }: React.ComponentPropsWithoutRef<"div">): React.JSX.Element;
 
 /** Trilha. O último item é a página onde você está — não é link. */
@@ -549,6 +560,11 @@ declare const DialogClose: React.ForwardRefExoticComponent<DialogPrimitive.Dialo
 declare const DialogContent: React.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogContentProps & React.RefAttributes<HTMLDivElement>, "ref"> & {
     /** `false` tira o X do canto — então feche pelo rodapé. */
     showClose?: boolean;
+    /**
+     * O nome acessível do X. Traduza-o: num app que não fala português o
+     * leitor de tela anunciaria "Fechar" no meio de uma tela em outra língua.
+     */
+    closeLabel?: string;
 } & React.RefAttributes<HTMLDivElement>>;
 declare function DialogHeader({ className, ...props }: React.ComponentPropsWithoutRef<"div">): React.JSX.Element;
 declare function DialogFooter({ className, ...props }: React.ComponentPropsWithoutRef<"div">): React.JSX.Element;
@@ -575,6 +591,8 @@ declare const SheetClose: React.ForwardRefExoticComponent<DialogPrimitive.Dialog
 declare const SheetContent: React.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogContentProps & React.RefAttributes<HTMLDivElement>, "ref"> & {
     side?: "right" | "left" | "top" | "bottom";
     showClose?: boolean;
+    /** O nome acessível do X. Traduza-o. */
+    closeLabel?: string;
 } & React.RefAttributes<HTMLDivElement>>;
 declare function SheetHeader({ className, ...props }: React.ComponentPropsWithoutRef<"div">): React.JSX.Element;
 declare function SheetFooter({ className, ...props }: React.ComponentPropsWithoutRef<"div">): React.JSX.Element;

@@ -13,13 +13,25 @@ export interface CarouselProps extends React.ComponentPropsWithoutRef<"div"> {
   /** `false` esconde as setas — então deixe claro que arrasta. */
   arrows?: boolean;
   label?: string;
+  /** Nomes acessíveis das setas. Traduza-os. */
+  prevLabel?: string;
+  nextLabel?: string;
 }
 
 /**
  * Uma fileira que desliza item por item. As setas flutuam nas bordas e a
  * fileira some sob elas — só do lado onde ainda há coisa para ver.
  */
-export function Carousel({ className, options, arrows = true, label = "Carrossel", children, ...props }: CarouselProps) {
+export function Carousel({
+  className,
+  options,
+  arrows = true,
+  label = "Carrossel",
+  prevLabel = "Anterior",
+  nextLabel = "Próximo",
+  children,
+  ...props
+}: CarouselProps) {
   const [ref, embla] = useEmblaCarousel({ align: "start", containScroll: "trimSnaps", ...options });
   const [canPrev, setCanPrev] = React.useState(false);
   const [canNext, setCanNext] = React.useState(false);
@@ -59,7 +71,7 @@ export function Carousel({ className, options, arrows = true, label = "Carrossel
               size="sm"
               icon={ChevronLeft}
               iconOnly
-              aria-label="Anterior"
+              aria-label={prevLabel}
               className="voga-carousel__arrow voga-carousel__arrow--prev"
               onClick={() => embla?.scrollPrev()}
             />
@@ -70,7 +82,7 @@ export function Carousel({ className, options, arrows = true, label = "Carrossel
               size="sm"
               icon={ChevronRight}
               iconOnly
-              aria-label="Próximo"
+              aria-label={nextLabel}
               className="voga-carousel__arrow voga-carousel__arrow--next"
               onClick={() => embla?.scrollNext()}
             />
