@@ -1,6 +1,6 @@
 {
   "name": "@voga/ui",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Design system Voga — neutro primeiro: tokens + componentes React para todos os projetos.",
   "license": "MIT",
   "author": "Caio Santos",

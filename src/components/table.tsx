@@ -11,9 +11,22 @@ export function TableWrap({ className, ...props }: React.ComponentPropsWithoutRe
 
 export const Table = React.forwardRef<
   HTMLTableElement,
-  React.ComponentPropsWithoutRef<"table"> & { hover?: boolean }
->(function Table({ className, hover, ...props }, ref) {
-  return <table ref={ref} className={cn("voga-table", hover && "voga-table--hover", className)} {...props} />;
+  React.ComponentPropsWithoutRef<"table"> & {
+    hover?: boolean;
+    /**
+     * Fileira mais larga. A régua da tabela é compacta por padrão; use só na
+     * listagem de poucas linhas e muita leitura, onde a densidade não compra nada.
+     */
+    roomy?: boolean;
+  }
+>(function Table({ className, hover, roomy, ...props }, ref) {
+  return (
+    <table
+      ref={ref}
+      className={cn("voga-table", hover && "voga-table--hover", roomy && "voga-table--roomy", className)}
+      {...props}
+    />
+  );
 });
 
 export function TableHead({ className, ...props }: React.ComponentPropsWithoutRef<"thead">) {

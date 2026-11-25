@@ -40,6 +40,17 @@
 .voga-table tbody tr { transition: background-color var(--voga-dur-fast) var(--voga-out); }
 .voga-table--hover tbody tr:hover { background: var(--voga-plate-soft); }
 .voga-table tbody tr[data-state="selected"] { background: var(--voga-plate); }
+/*
+ * Fileira mais larga. A régua da tabela é COMPACTA por padrão — é o que faz
+ * caber informação por altura de janela. Este modificador existe para a
+ * listagem de poucas linhas e muita leitura (uma ficha, um extrato), onde a
+ * densidade alta não compra nada e só aperta.
+ */
+.voga-table--roomy thead th,
+.voga-table--roomy td {
+  padding: var(--voga-space-3) var(--voga-space-4);
+}
+
 .voga-table [data-align="end"] { text-align: right; }
 .voga-table [data-align="center"] { text-align: center; }
 .voga-table tfoot td {

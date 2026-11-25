@@ -452,6 +452,11 @@ declare function Steps({ className, total, done, running, label, ...props }: Ste
 declare function TableWrap({ className, ...props }: React.ComponentPropsWithoutRef<"div">): React.JSX.Element;
 declare const Table: React.ForwardRefExoticComponent<Omit<React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTableElement>, HTMLTableElement>, "ref"> & {
     hover?: boolean;
+    /**
+     * Fileira mais larga. A régua da tabela é compacta por padrão; use só na
+     * listagem de poucas linhas e muita leitura, onde a densidade não compra nada.
+     */
+    roomy?: boolean;
 } & React.RefAttributes<HTMLTableElement>>;
 declare function TableHead({ className, ...props }: React.ComponentPropsWithoutRef<"thead">): React.JSX.Element;
 declare function TableBody({ className, ...props }: React.ComponentPropsWithoutRef<"tbody">): React.JSX.Element;

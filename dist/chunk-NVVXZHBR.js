@@ -122,8 +122,15 @@ function Empty({ className, icon, title, desc, actions, size = "panel", ...props
 function TableWrap({ className, ...props }) {
   return /* @__PURE__ */ jsx("div", { className: cn("voga-table-wrap", className), ...props });
 }
-var Table = React3.forwardRef(function Table2({ className, hover, ...props }, ref) {
-  return /* @__PURE__ */ jsx("table", { ref, className: cn("voga-table", hover && "voga-table--hover", className), ...props });
+var Table = React3.forwardRef(function Table2({ className, hover, roomy, ...props }, ref) {
+  return /* @__PURE__ */ jsx(
+    "table",
+    {
+      ref,
+      className: cn("voga-table", hover && "voga-table--hover", roomy && "voga-table--roomy", className),
+      ...props
+    }
+  );
 });
 function TableHead({ className, ...props }) {
   return /* @__PURE__ */ jsx("thead", { className: cn(className), ...props });
