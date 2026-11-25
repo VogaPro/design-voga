@@ -1,0 +1,7 @@
+
+*.log
+.DS_Store
+.turbo
+node_modules
+playground/dist
+playground/node_modules

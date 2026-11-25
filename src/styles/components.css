@@ -1,0 +1,900 @@
+/* ==========================================================================
+   Voga — componentes
+   Todo valor vem de tokens.css. Prefixo `voga-`.
+   Controles são sempre nossos: select, menu, checkbox e diálogo não usam o
+   visual nativo do sistema.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Contexto de elevação.
+
+   O que fica DENTRO de uma superfície elevada sobe um degrau (`raised-2`), para
+   nunca derreter no contêiner no tema escuro. A regra vale para os filhos — não
+   para o contêiner — então o contêiner guarda o próprio nível e um card dentro
+   de um diálogo sobe exatamente uma vez. No tema claro nada muda, porque lá
+   `raised-2` também é branco.
+   -------------------------------------------------------------------------- */
+
+:where(.voga-card, .voga-dialog, .voga-sheet, .voga-drawer, .voga-glass, .voga-composer, .voga-toast) > * {
+  --voga-raised: var(--voga-raised-2);
+  --voga-surface-raised: var(--voga-raised-2);
+}
+
+/* --------------------------------------------------------------------------
+   Ícone — grid de 20px, traço 1.6, pontas e junções arredondadas.
+   -------------------------------------------------------------------------- */
+
+.voga-icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* --------------------------------------------------------------------------
+   Botão — a régua de controle, peso 600, raio 30% da altura.
+   A ação primária é tinta com degradê da própria tinta, luz em cima e sombra
+   na base. Pressionar afunda com mola.
+   -------------------------------------------------------------------------- */
+
+.voga-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--voga-icon-gap);
+  flex: none;
+  box-sizing: border-box;
+  height: var(--voga-control-h-md);
+  padding-inline: var(--voga-control-px-md);
+  border: 1px solid transparent;
+  border-radius: var(--voga-control-r-md);
+  font: inherit;
+  font-size: var(--voga-control-fs-md);
+  font-weight: 600;
+  letter-spacing: var(--voga-track-tight);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--voga-dur-fast) var(--voga-out),
+    box-shadow var(--voga-dur-fast) var(--voga-out),
+    color var(--voga-dur-fast) var(--voga-out),
+    filter var(--voga-dur-fast) var(--voga-out),
+    transform var(--voga-dur-fast) var(--voga-spring);
+}
+
+.voga-btn > .voga-icon,
+.voga-btn > .voga-spinner {
+  width: var(--voga-control-icon-md);
+  height: var(--voga-control-icon-md);
+}
+
+/* As palavras cortam com elipse num lugar estreito; qualquer outro filho fica. */
+.voga-btn__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.voga-btn:active:not([disabled]):not([aria-busy="true"]) {
+  transform: scale(0.97) translateY(0.5px);
+}
+
+.voga-btn[disabled],
+.voga-btn[aria-busy="true"] {
+  cursor: not-allowed;
+}
+.voga-btn[disabled] {
+  color: var(--voga-muted);
+  background: var(--voga-surface);
+  border-color: var(--voga-line);
+  box-shadow: none;
+  filter: none;
+}
+
+/* Secundário (o padrão): papel elevado, anel de hairline, luz no topo. */
+.voga-btn--default {
+  background: var(--voga-raised);
+  color: var(--voga-ink);
+  box-shadow: var(--voga-e1), var(--voga-top);
+}
+.voga-btn--default:hover:not([disabled]) {
+  box-shadow: var(--voga-e2), var(--voga-top);
+}
+
+/* Primário: tinta. No máximo um por área. */
+.voga-btn--primary {
+  background: var(--voga-action);
+  background-image: var(--voga-action-grad);
+  color: var(--voga-on-action);
+  box-shadow: var(--voga-gloss), var(--voga-lift);
+}
+.voga-btn--primary:hover:not([disabled]) {
+  filter: brightness(1.08);
+}
+
+/* Acento: identidade. Para a ação que leva ao objeto com cor própria. */
+.voga-btn--accent {
+  background: var(--voga-accent);
+  background-image: linear-gradient(to bottom, var(--voga-accent-2), var(--voga-accent));
+  color: var(--voga-on-accent);
+  box-shadow: var(--voga-gloss-strong), var(--voga-lift);
+}
+.voga-btn--accent:hover:not([disabled]) {
+  filter: brightness(1.06);
+}
+
+/* Destrutivo: palavra sempre junto. */
+.voga-btn--danger {
+  background: var(--voga-raised);
+  color: var(--voga-danger);
+  box-shadow: var(--voga-e1), var(--voga-top);
+}
+.voga-btn--danger:hover:not([disabled]) {
+  background: var(--voga-danger-soft);
+  box-shadow: var(--voga-e2), var(--voga-top);
+}
+
+/* Fantasma: barras de ferramenta e ações dentro de linha. */
+.voga-btn--ghost {
+  background: transparent;
+  color: var(--voga-muted);
+}
+.voga-btn--ghost:hover:not([disabled]) {
+  background: var(--voga-plate);
+  color: var(--voga-ink);
+}
+
+/* Link: a ação quieta de uma linha ou card. Só as palavras, sem caixa. */
+.voga-btn--link {
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--voga-ink);
+  font-size: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--voga-line-strong);
+  text-underline-offset: 3px;
+}
+.voga-btn--link:hover:not([disabled]) {
+  text-decoration-color: currentColor;
+}
+.voga-btn--link:active:not([disabled]) {
+  transform: none;
+}
+
+.voga-btn--sm {
+  height: var(--voga-control-h-sm);
+  padding-inline: var(--voga-control-px-sm);
+  border-radius: var(--voga-control-r-sm);
+  font-size: var(--voga-control-fs-sm);
+  gap: var(--voga-icon-gap-sm);
+}
+.voga-btn--sm > .voga-icon,
+.voga-btn--sm > .voga-spinner { width: var(--voga-control-icon-sm); height: var(--voga-control-icon-sm); }
+
+.voga-btn--lg {
+  height: var(--voga-control-h-lg);
+  padding-inline: var(--voga-control-px-lg);
+  border-radius: var(--voga-control-r-lg);
+  font-size: var(--voga-control-fs-lg);
+  gap: var(--voga-icon-gap-lg);
+}
+.voga-btn--lg > .voga-icon,
+.voga-btn--lg > .voga-spinner { width: var(--voga-control-icon-lg); height: var(--voga-control-icon-lg); }
+
+.voga-btn--icon { width: var(--voga-control-h-md); padding: 0; }
+.voga-btn--icon.voga-btn--sm { width: var(--voga-control-h-sm); }
+.voga-btn--icon.voga-btn--lg { width: var(--voga-control-h-lg); }
+
+.voga-btn--block { width: 100%; flex: 1 1 auto; }
+
+/* O que um dedo precisa: a placa continua 32, o alvo cresce por fora. */
+@media (pointer: coarse) {
+  .voga-btn--sm::after,
+  .voga-btn--icon::after {
+    content: "";
+    position: absolute;
+    inset: calc((var(--voga-touch-target) - 100%) / -2);
+    min-width: var(--voga-touch-target);
+    min-height: var(--voga-touch-target);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Kbd — 18px de altura, placa cinza, nunca mono de verdade em rótulo.
+   -------------------------------------------------------------------------- */
+
+.voga-kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding-inline: 5px;
+  border-radius: 5px;
+  background: var(--voga-plate);
+  color: inherit;
+  font-family: var(--voga-font-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  font-feature-settings: "tnum";
+  opacity: 0.75;
+}
+
+/* --------------------------------------------------------------------------
+   Campo, rótulo, ajuda, erro — o ritmo do formulário.
+   -------------------------------------------------------------------------- */
+
+.voga-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--voga-field-gap);
+  min-width: 0;
+}
+.voga-field__label {
+  font-size: var(--voga-text-sm);
+  line-height: 18px;
+  font-weight: 600;
+  color: var(--voga-ink);
+}
+.voga-field__req { color: var(--voga-danger); }
+.voga-field__help {
+  font-size: var(--voga-text-sm);
+  line-height: 18px;
+  color: var(--voga-muted);
+}
+.voga-field__error {
+  font-size: var(--voga-text-sm);
+  line-height: 18px;
+  color: var(--voga-danger);
+}
+.voga-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--voga-form-gap);
+}
+
+/* Rótulo de seção (eyebrow): caixa alta, fraco, nunca mono. */
+.voga-eyebrow {
+  font-size: 11.5px;
+  line-height: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--voga-track-label);
+  color: var(--voga-faint);
+}
+
+/* Metadado: custo, contagem, horário — com algarismos tabulares. */
+.voga-meta {
+  font-size: var(--voga-text-xs);
+  line-height: 16px;
+  color: var(--voga-faint);
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Entrada — campo branco com contorno fino. Cinza só no trilho.
+   -------------------------------------------------------------------------- */
+
+.voga-input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: var(--voga-control-h-md);
+  padding-inline: var(--voga-control-px-md);
+  border: 1px solid var(--voga-line-strong);
+  border-radius: var(--voga-control-r-md);
+  background: var(--voga-raised);
+  color: var(--voga-ink);
+  font: inherit;
+  font-size: var(--voga-control-fs-md);
+  transition: border-color var(--voga-dur-fast) var(--voga-out), box-shadow var(--voga-dur-fast) var(--voga-out);
+}
+.voga-input::placeholder { color: var(--voga-muted); }
+.voga-input[disabled] {
+  background: var(--voga-surface);
+  color: var(--voga-muted);
+  border-color: var(--voga-line);
+  cursor: not-allowed;
+}
+.voga-input[aria-invalid="true"] { border-color: var(--voga-danger); }
+html:not([data-pointer]) .voga-input:focus-visible { box-shadow: var(--voga-focus-ring); }
+
+.voga-input--sm {
+  height: var(--voga-control-h-sm);
+  padding-inline: var(--voga-control-px-sm);
+  border-radius: var(--voga-control-r-sm);
+  font-size: var(--voga-control-fs-sm);
+}
+.voga-input--lg {
+  height: var(--voga-control-h-lg);
+  padding-inline: var(--voga-control-px-lg);
+  border-radius: var(--voga-control-r-lg);
+  font-size: var(--voga-control-fs-lg);
+}
+
+.voga-textarea {
+  height: auto;
+  min-height: 80px;
+  padding-block: 9px;
+  line-height: 22px;
+  resize: vertical;
+  field-sizing: content;
+}
+
+/* --------------------------------------------------------------------------
+   Caixa de texto flutuante (composer) — raio 18, e2 + luz; e3 em foco.
+   -------------------------------------------------------------------------- */
+
+.voga-composer {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--voga-space-2);
+  padding: var(--voga-space-2);
+  border-radius: var(--voga-radius-xl);
+  background: var(--voga-raised);
+  box-shadow: var(--voga-e2), var(--voga-top);
+  transition: box-shadow var(--voga-dur-base) var(--voga-out);
+}
+.voga-composer:focus-within { box-shadow: var(--voga-e3), var(--voga-top); }
+.voga-composer textarea {
+  flex: 1;
+  min-width: 0;
+  padding: var(--voga-space-2);
+  border: 0;
+  background: none;
+  color: var(--voga-ink);
+  font: inherit;
+  resize: none;
+  outline: none;
+  field-sizing: content;
+  max-height: 40vh;
+}
+.voga-composer textarea::placeholder { color: var(--voga-muted); }
+
+/* --------------------------------------------------------------------------
+   Caixa de marcar e chave — o check desenha o traço, o polegar desliza.
+   -------------------------------------------------------------------------- */
+
+.voga-check {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--voga-line-strong);
+  border-radius: var(--voga-radius-sm);
+  background: var(--voga-raised);
+  cursor: pointer;
+  transition: background-color var(--voga-dur-fast) var(--voga-out), border-color var(--voga-dur-fast) var(--voga-out);
+}
+.voga-check[data-state="checked"],
+.voga-check[data-state="indeterminate"] {
+  background: var(--voga-action);
+  border-color: var(--voga-action);
+  color: var(--voga-on-action);
+}
+.voga-check[data-disabled] { cursor: not-allowed; opacity: 0.5; }
+.voga-check svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* O traço se desenha ao marcar. */
+.voga-check svg path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  transition: stroke-dashoffset var(--voga-dur-base) var(--voga-out);
+}
+.voga-check[data-state="checked"] svg path,
+.voga-check[data-state="indeterminate"] svg path { stroke-dashoffset: 0; }
+
+.voga-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  width: 36px;
+  height: 20px;
+  padding: 2px;
+  border: 0;
+  border-radius: var(--voga-radius-full);
+  background: var(--voga-sunken);
+  box-shadow: inset 0 0 0 1px var(--voga-line-strong);
+  cursor: pointer;
+  transition: background-color var(--voga-dur-base) var(--voga-out), box-shadow var(--voga-dur-base) var(--voga-out);
+}
+.voga-switch[data-state="checked"] {
+  background: var(--voga-action);
+  box-shadow: inset 0 0 0 1px var(--voga-action);
+}
+.voga-switch[data-disabled] { cursor: not-allowed; opacity: 0.5; }
+.voga-switch__thumb {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--voga-radius-full);
+  background: var(--voga-raised);
+  box-shadow: var(--voga-thumb-lift);
+  transform: translateX(0);
+  transition: transform var(--voga-dur-base) var(--voga-spring);
+}
+.voga-switch[data-state="checked"] .voga-switch__thumb { transform: translateX(16px); }
+
+/* A linha que embrulha um controle e suas palavras. */
+.voga-control-row {
+  display: flex;
+  align-items: center;
+  gap: var(--voga-space-3);
+  padding-block: var(--voga-row-py);
+  font-size: var(--voga-text-md);
+  cursor: pointer;
+}
+.voga-control-row--split { justify-content: space-between; }
+
+/* --------------------------------------------------------------------------
+   Segmentado — pílula que desliza com mola. Cantos concêntricos: o raio de
+   dentro é o de fora menos o recuo.
+   -------------------------------------------------------------------------- */
+
+.voga-seg {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: var(--voga-control-h-md);
+  padding: var(--voga-seg-in);
+  border-radius: var(--voga-control-r-md);
+  background: var(--voga-sunken);
+  box-shadow: inset 0 0 0 1px var(--voga-line);
+}
+.voga-seg__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--voga-icon-gap-sm);
+  height: 100%;
+  padding-inline: var(--voga-space-3);
+  border: 0;
+  border-radius: calc(var(--voga-control-r-md) - var(--voga-seg-in));
+  background: transparent;
+  color: var(--voga-muted);
+  font: inherit;
+  font-size: var(--voga-control-fs-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--voga-dur-fast) var(--voga-out), background-color var(--voga-dur-fast) var(--voga-out);
+}
+.voga-seg__item:hover { color: var(--voga-ink); }
+.voga-seg__item[data-state="on"],
+.voga-seg__item[aria-selected="true"],
+.voga-seg__item[aria-pressed="true"] {
+  background: var(--voga-raised);
+  color: var(--voga-ink);
+  box-shadow: var(--voga-e1), var(--voga-top);
+}
+.voga-seg--sm { height: var(--voga-control-h-sm); padding: 3px; border-radius: var(--voga-control-r-sm); }
+.voga-seg--sm .voga-seg__item { border-radius: calc(var(--voga-control-r-sm) - 3px); padding-inline: var(--voga-space-2); }
+
+/* --------------------------------------------------------------------------
+   Abas — a linha fica embaixo; nada de fundo colorido.
+   -------------------------------------------------------------------------- */
+
+.voga-tabs {
+  display: flex;
+  gap: var(--voga-space-4);
+  border-bottom: 1px solid var(--voga-line);
+}
+.voga-tabs__item {
+  position: relative;
+  padding: var(--voga-space-2) 2px;
+  border: 0;
+  background: none;
+  color: var(--voga-muted);
+  font: inherit;
+  font-size: var(--voga-text-md);
+  font-weight: 600;
+  letter-spacing: var(--voga-track-tight);
+  cursor: pointer;
+  transition: color var(--voga-dur-fast) var(--voga-out);
+}
+.voga-tabs__item:hover { color: var(--voga-ink); }
+.voga-tabs__item[data-state="active"],
+.voga-tabs__item[aria-selected="true"] { color: var(--voga-ink); }
+.voga-tabs__item[data-state="active"]::after,
+.voga-tabs__item[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: var(--voga-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Card e seção — papel elevado, anel de hairline, luz no topo.
+   Card é sempre neutro: o estado vai num chip, nunca no fundo.
+   -------------------------------------------------------------------------- */
+
+.voga-card {
+  box-sizing: border-box;
+  border-radius: var(--voga-radius-lg);
+  background: var(--voga-raised-2);
+  color: var(--voga-ink);
+  box-shadow: var(--voga-e1), var(--voga-top);
+}
+.voga-card--interactive {
+  cursor: pointer;
+  transition: box-shadow var(--voga-dur-base) var(--voga-out);
+}
+.voga-card--interactive:hover { box-shadow: var(--voga-e2), var(--voga-top); }
+.voga-card--flat { background: var(--voga-sunken); box-shadow: inset 0 0 0 1px var(--voga-line); }
+.voga-card--section { border-radius: var(--voga-radius-section); }
+
+.voga-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--voga-space-1);
+  padding: var(--voga-space-4) var(--voga-space-4) 0;
+}
+.voga-card__title {
+  font-size: var(--voga-text-h3);
+  font-weight: 650;
+  letter-spacing: var(--voga-track-tight);
+  line-height: 1.3;
+}
+.voga-card__desc { font-size: var(--voga-text-md); color: var(--voga-muted); }
+.voga-card__body { padding: var(--voga-space-4); }
+.voga-card__foot {
+  display: flex;
+  align-items: center;
+  gap: var(--voga-space-2);
+  padding: 0 var(--voga-space-4) var(--voga-space-4);
+}
+
+/* Poço — código, faixa de tabela, citação dentro de um card. */
+.voga-well {
+  border-radius: var(--voga-radius-item);
+  background: var(--voga-sunken);
+  box-shadow: inset 0 0 0 1px var(--voga-line);
+}
+
+/* --------------------------------------------------------------------------
+   Chip — etiqueta que não se pressiona. Pílula com ícone, nunca bolinha.
+   -------------------------------------------------------------------------- */
+
+.voga-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding-inline: var(--voga-space-2);
+  border-radius: var(--voga-radius-full);
+  background: var(--voga-plate);
+  color: var(--voga-muted);
+  font-size: var(--voga-text-xs);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  font-feature-settings: "tnum";
+}
+.voga-chip > .voga-icon { width: 13px; height: 13px; stroke-width: 1.9; }
+.voga-chip--attention { background: var(--voga-attention-soft); color: var(--voga-warn); }
+.voga-chip--ok { background: var(--voga-plate); color: var(--voga-ok); }
+.voga-chip--danger { background: var(--voga-danger-soft); color: var(--voga-danger); }
+.voga-chip--info { background: var(--voga-info-soft); color: var(--voga-info); }
+.voga-chip--accent { background: var(--voga-accent-soft); color: var(--voga-accent); }
+.voga-chip--solid { background: var(--voga-action); color: var(--voga-on-action); }
+.voga-chip--count { min-width: 22px; justify-content: center; padding-inline: 6px; }
+
+/* --------------------------------------------------------------------------
+   Aviso — card neutro com uma barra de 2px na lateral; a cor é da barra e do
+   ícone, nunca do fundo inteiro.
+   -------------------------------------------------------------------------- */
+
+.voga-note {
+  display: flex;
+  gap: var(--voga-space-3);
+  padding: var(--voga-space-3) var(--voga-space-4);
+  border-radius: var(--voga-radius-item);
+  border-left: 2px solid var(--voga-line-strong);
+  background: var(--voga-raised);
+  box-shadow: var(--voga-e1);
+  font-size: var(--voga-text-md);
+  line-height: 21px;
+}
+.voga-note__title { font-weight: 600; color: var(--voga-ink); }
+.voga-note__body { color: var(--voga-muted); }
+.voga-note > .voga-icon { margin-top: 1px; width: 18px; height: 18px; color: var(--voga-muted); }
+.voga-note--attention { border-left-color: var(--voga-attention); }
+.voga-note--attention > .voga-icon { color: var(--voga-attention); }
+.voga-note--danger { border-left-color: var(--voga-danger); }
+.voga-note--danger > .voga-icon { color: var(--voga-danger); }
+.voga-note--ok { border-left-color: var(--voga-ok); }
+.voga-note--ok > .voga-icon { color: var(--voga-ok); }
+.voga-note--info { border-left-color: var(--voga-info); }
+.voga-note--info > .voga-icon { color: var(--voga-info); }
+
+/* --------------------------------------------------------------------------
+   Vidro — menus, popovers, select, toasts, paleta. e3 por cima.
+   -------------------------------------------------------------------------- */
+
+.voga-glass {
+  border-radius: var(--voga-radius-lg);
+  background: var(--voga-glass-solid);
+  box-shadow: var(--voga-e3), var(--voga-top);
+}
+@supports (backdrop-filter: blur(1px)) {
+  .voga-glass {
+    background: var(--voga-glass);
+    backdrop-filter: blur(18px) saturate(1.6);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Menu — itens com raio concêntrico ao do painel.
+   -------------------------------------------------------------------------- */
+
+.voga-menu {
+  min-width: 192px;
+  padding: var(--voga-menu-pad);
+  border-radius: var(--voga-radius-lg);
+  /*
+   * Uma camada do Radix é tão alta quanto a janela deixa no lado dela, nunca um
+   * teto fixo: ela só rola quando o conteúdo não cabe de jeito nenhum. Sem
+   * fallback no var() de propósito — antes do Radix posicionar, o teto é `none`,
+   * então o flip mede o conteúdo inteiro e abre no lado que tem espaço. Com um
+   * teto ali, o painel cortado "caberia" no lado curto e rolaria lá.
+   */
+  max-height: var(--radix-popper-available-height);
+  max-width: calc(100vw - 2 * var(--voga-space-3));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.voga-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--voga-icon-gap);
+  position: relative;
+  min-height: var(--voga-control-h-sm);
+  padding: 0 var(--voga-space-2);
+  border-radius: calc(var(--voga-radius-lg) - var(--voga-menu-pad));
+  color: var(--voga-ink);
+  font-size: var(--voga-text-md);
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  transition: background-color var(--voga-dur-fast) var(--voga-out);
+}
+.voga-menu__item > .voga-icon { width: 18px; height: 18px; color: var(--voga-muted); }
+.voga-menu__item[data-highlighted] { background: var(--voga-plate); }
+.voga-menu__item[data-disabled] { color: var(--voga-muted); cursor: not-allowed; }
+.voga-menu__item--danger { color: var(--voga-danger); }
+.voga-menu__item--danger > .voga-icon { color: var(--voga-danger); }
+.voga-menu__item--danger[data-highlighted] { background: var(--voga-danger-soft); }
+.voga-menu__item--indent { padding-left: 28px; }
+.voga-menu__mark { position: absolute; left: 8px; }
+.voga-menu__shortcut { margin-left: auto; display: inline-flex; gap: 3px; }
+.voga-menu__label {
+  padding: var(--voga-space-2) var(--voga-space-2) var(--voga-space-1);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--voga-track-label);
+  color: var(--voga-faint);
+}
+.voga-menu__sep {
+  height: 1px;
+  margin: var(--voga-space-1) calc(var(--voga-menu-pad) * -1 + 2px);
+  background: var(--voga-line);
+}
+
+/* --------------------------------------------------------------------------
+   Select — visual nosso, nunca o nativo.
+   -------------------------------------------------------------------------- */
+
+.voga-select {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--voga-space-2);
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--voga-control-h-md);
+  padding-inline: var(--voga-control-px-md);
+  border: 1px solid var(--voga-line-strong);
+  border-radius: var(--voga-control-r-md);
+  background: var(--voga-raised);
+  color: var(--voga-ink);
+  font: inherit;
+  font-size: var(--voga-control-fs-md);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--voga-dur-fast) var(--voga-out);
+}
+.voga-select > .voga-icon { width: 16px; height: 16px; color: var(--voga-muted); flex: none; }
+.voga-select[data-placeholder] { color: var(--voga-muted); }
+.voga-select[disabled] { cursor: not-allowed; color: var(--voga-muted); border-color: var(--voga-line); }
+
+/* --------------------------------------------------------------------------
+   Diálogo — vidro em e3, raio de seção. Entrada sobe; fechar é imediato.
+   -------------------------------------------------------------------------- */
+
+.voga-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--voga-z-overlay);
+  background: var(--voga-scrim);
+  backdrop-filter: blur(2px);
+}
+.voga-scrim[data-state="open"] { animation: var(--voga-dur-base) var(--voga-out) voga-in; }
+
+.voga-dialog {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: var(--voga-z-modal);
+  display: flex;
+  flex-direction: column;
+  gap: var(--voga-space-4);
+  box-sizing: border-box;
+  width: calc(100vw - 2 * var(--voga-space-4));
+  max-width: 480px;
+  max-height: calc(100vh - 2 * var(--voga-space-8));
+  padding: var(--voga-space-6);
+  overflow-y: auto;
+  transform: translate(-50%, -50%);
+  border-radius: var(--voga-radius-section);
+  background: var(--voga-raised);
+  box-shadow: var(--voga-e3), var(--voga-top);
+}
+.voga-dialog[data-state="open"] { animation: var(--voga-dur-base) var(--voga-out) voga-dialog-in; }
+@keyframes voga-dialog-in {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 8px)) scale(0.985) }
+  to { opacity: 1; transform: translate(-50%, -50%) }
+}
+.voga-dialog__head { display: flex; flex-direction: column; gap: var(--voga-space-1); padding-right: var(--voga-space-8); }
+.voga-dialog__title { font-size: var(--voga-text-h2); font-weight: 650; letter-spacing: var(--voga-track-tight); line-height: 1.25; }
+.voga-dialog__desc { font-size: var(--voga-text-md); line-height: 21px; color: var(--voga-muted); }
+.voga-dialog__foot { display: flex; flex-direction: column-reverse; gap: var(--voga-space-2); }
+@media (min-width: 480px) {
+  .voga-dialog__foot { flex-direction: row; justify-content: flex-end; }
+}
+.voga-dialog__close {
+  position: absolute;
+  top: var(--voga-space-3);
+  right: var(--voga-space-3);
+}
+
+/* --------------------------------------------------------------------------
+   Dica — tinta sobre papel invertido, pequena.
+   -------------------------------------------------------------------------- */
+
+.voga-tip {
+  z-index: var(--voga-z-tooltip);
+  max-width: 260px;
+  padding: 5px var(--voga-space-2);
+  border-radius: var(--voga-radius-sm);
+  background: var(--voga-ink);
+  color: var(--voga-bg);
+  font-size: var(--voga-text-sm);
+  font-weight: 500;
+  line-height: 18px;
+  box-shadow: var(--voga-e2);
+}
+.voga-tip[data-state="delayed-open"] { animation: var(--voga-dur-fast) var(--voga-out) voga-rise; }
+.voga-tip__arrow { fill: var(--voga-ink); }
+
+/* --------------------------------------------------------------------------
+   Esqueleto, girador, separador, avatar.
+   -------------------------------------------------------------------------- */
+
+.voga-skeleton {
+  border-radius: var(--voga-radius-sm);
+  background: var(--voga-sunken);
+  animation: var(--voga-dur-base) linear infinite alternate voga-skel;
+}
+@keyframes voga-skel { from { opacity: 1 } to { opacity: 0.55 } }
+
+.voga-spinner {
+  width: var(--voga-control-icon-md);
+  height: var(--voga-control-icon-md);
+  flex: none;
+  animation: 800ms linear infinite voga-spin;
+}
+.voga-spinner circle { fill: none; stroke: currentColor; stroke-width: 2.4; opacity: 0.25; }
+.voga-spinner path { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+
+.voga-sep { flex: none; background: var(--voga-line); }
+.voga-sep[data-orientation="horizontal"] { height: 1px; width: 100%; }
+.voga-sep[data-orientation="vertical"] { width: 1px; align-self: stretch; }
+.voga-sep--strong { background: var(--voga-line-2); }
+
+.voga-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--voga-radius-full);
+  background: var(--voga-sunken);
+  box-shadow: inset 0 0 0 1px var(--voga-line);
+  color: var(--voga-ink);
+  font-size: var(--voga-text-md);
+  font-weight: 650;
+  letter-spacing: var(--voga-track-tight);
+  overflow: hidden;
+  user-select: none;
+}
+.voga-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.voga-avatar--sm { width: 24px; height: 24px; font-size: var(--voga-text-xs); }
+.voga-avatar--lg { width: 48px; height: 48px; font-size: var(--voga-text-lg); }
+/* Marca: quadrado com o raio a 30% do lado, um canto vivo no inferior esquerdo. */
+.voga-avatar--mark {
+  border-radius: 30%;
+  border-bottom-left-radius: var(--voga-radius-xs);
+  background: linear-gradient(to bottom right, var(--voga-accent-2), var(--voga-accent));
+  color: var(--voga-on-accent);
+  box-shadow: none;
+}
+
+/* --------------------------------------------------------------------------
+   Barra de ferramentas — placa de controles compactos sobre papel elevado.
+   -------------------------------------------------------------------------- */
+
+.voga-toolbar {
+  --voga-bar-pad: 4px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: var(--voga-bar-pad);
+  border-radius: var(--voga-radius-btn);
+  background: var(--voga-raised);
+  box-shadow: var(--voga-e1), var(--voga-top);
+}
+.voga-toolbar .voga-btn--icon { border-radius: calc(var(--voga-radius-btn) - var(--voga-bar-pad)); }
+
+/* Linha de lista com hairline entre as linhas, nunca abaixo da última. */
+.voga-rows > * + * { border-top: 1px solid var(--voga-line); }
+.voga-row {
+  display: flex;
+  align-items: center;
+  gap: var(--voga-space-3);
+  padding: var(--voga-row-py) var(--voga-space-4);
+  min-height: 36px;
+}
+.voga-row__main { flex: 1; min-width: 0; }
+.voga-row__title { font-size: var(--voga-text-md); font-weight: 500; }
+.voga-row__sub { font-size: var(--voga-text-sm); color: var(--voga-muted); }
+
+/* Estado escolhido — afundado como tecla pressionada, nunca cor. */
+.voga-chosen {
+  background: var(--voga-chosen-bg);
+  box-shadow: var(--voga-chosen-shadow);
+}
+
+/* --------------------------------------------------------------------------
+   Sem teclado, sem dica de teclado.
+   -------------------------------------------------------------------------- */
+
+@media (hover: none) and (pointer: coarse) {
+  .voga-btn .voga-kbd,
+  .voga-menu__shortcut { display: none; }
+}

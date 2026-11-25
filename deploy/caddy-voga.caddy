@@ -1,0 +1,39 @@
+# Voga — cópia versionada de /etc/caddy/sites/voga.caddy
+#
+# Instalar numa VPS nova:
+#   1. apt install caddy
+#   2. cp deploy/caddy-voga.caddy /etc/caddy/sites/voga.caddy
+#   3. caddy hash-password  →  cole o hash no lugar de SUBSTITUA_PELO_HASH
+#   4. trocar o hostname pelo da máquina
+#   5. systemctl reload caddy
+#
+# Voga — design system. Serve o build estático do playground React.
+# Conteúdo em /srv/voga (publicado por `bun run publicar` no repo).
+
+(voga_site) {
+	root * /srv/voga
+	encode zstd gzip
+	file_server
+
+	basic_auth {
+		caio SUBSTITUA_PELO_HASH
+	}
+
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options SAMEORIGIN
+		Referrer-Policy no-referrer
+		-Server
+	}
+
+	# O app React é uma página só: qualquer rota desconhecida cai no index.
+	try_files {path} {path}/ /index.html
+}
+
+# HTTPS automático (Let's Encrypt) no hostname público da VPS.
+# Só HTTPS de propósito: a senha de basic auth em HTTP iria em texto claro.
+# O Caddy redireciona http://… para cá sozinho.
+vmi3764524.contaboserver.net {
+	import voga_site
+}
+

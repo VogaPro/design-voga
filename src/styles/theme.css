@@ -1,0 +1,144 @@
+/* ==========================================================================
+   Voga — ponte Tailwind v4
+   Os componentes se vestem pelo components.css. Esta ponte é para o código do
+   app: bg-raised, text-muted, border-line, rounded-btn, shadow-e2, h-control-md.
+   `inline` é obrigatório — mantém o utilitário apontando para a variável, então
+   trocar [data-theme] re-tematiza sem rebuild.
+   ========================================================================== */
+
+@theme inline {
+  /* Superfícies */
+  --color-bg: var(--voga-bg);
+  --color-pane: var(--voga-pane);
+  --color-raised: var(--voga-raised);
+  --color-raised-2: var(--voga-raised-2);
+  --color-sunken: var(--voga-sunken);
+  --color-side: var(--voga-side);
+  --color-glass: var(--voga-glass);
+  --color-scrim: var(--voga-scrim);
+
+  /* Série de gráfico */
+  --color-series-1: var(--voga-series-1);
+  --color-series-2: var(--voga-series-2);
+  --color-series-3: var(--voga-series-3);
+  --color-series-4: var(--voga-series-4);
+  --color-series-5: var(--voga-series-5);
+  --color-series-6: var(--voga-series-6);
+  --color-series-7: var(--voga-series-7);
+  --color-series-8: var(--voga-series-8);
+
+  /* Linhas */
+  --color-line: var(--voga-line);
+  --color-line-2: var(--voga-line-2);
+  --color-line-strong: var(--voga-line-strong);
+
+  /* Tinta */
+  --color-ink: var(--voga-ink);
+  --color-ink-2: var(--voga-ink-2);
+  --color-muted: var(--voga-muted);
+  --color-faint: var(--voga-faint);
+
+  /* Placas */
+  --color-plate: var(--voga-plate);
+  --color-plate-soft: var(--voga-plate-soft);
+
+  /* Papéis */
+  --color-action: var(--voga-action);
+  --color-on-action: var(--voga-on-action);
+  --color-accent: var(--voga-accent);
+  --color-accent-2: var(--voga-accent-2);
+  --color-accent-soft: var(--voga-accent-soft);
+  --color-on-accent: var(--voga-on-accent);
+  --color-attention: var(--voga-attention);
+  --color-attention-soft: var(--voga-attention-soft);
+  --color-ok: var(--voga-ok);
+  --color-warn: var(--voga-warn);
+  --color-warn-soft: var(--voga-warn-soft);
+  --color-on-warn: var(--voga-on-warn);
+  --color-danger: var(--voga-danger);
+  --color-danger-soft: var(--voga-danger-soft);
+  --color-info: var(--voga-info);
+  --color-info-soft: var(--voga-info-soft);
+
+  /* Tipo */
+  --font-sans: var(--voga-font-sans);
+  --font-mono: var(--voga-font-mono);
+
+  --text-xs: var(--voga-text-xs);
+  --text-xs--line-height: 16px;
+  --text-sm: var(--voga-text-sm);
+  --text-sm--line-height: 18px;
+  --text-md: var(--voga-text-md);
+  --text-md--line-height: 21px;
+  --text-base: var(--voga-text-base);
+  --text-base--line-height: 22px;
+  --text-lg: var(--voga-text-lg);
+  --text-lg--line-height: 24px;
+  --text-h3: var(--voga-text-h3);
+  --text-h3--line-height: 23px;
+  --text-h2: var(--voga-text-h2);
+  --text-h2--line-height: 26px;
+  --text-h1: var(--voga-text-h1);
+  --text-h1--line-height: 34px;
+  --text-display: var(--voga-text-display);
+  --text-display--line-height: 38px;
+
+  --tracking-tight: var(--voga-track-tight);
+  --tracking-tighter: var(--voga-track-tighter);
+  --tracking-label: var(--voga-track-label);
+
+  /* Espaço */
+  --spacing: 4px;
+
+  /* Forma */
+  --radius-xs: var(--voga-radius-xs);
+  --radius-sm: var(--voga-radius-sm);
+  --radius-item: var(--voga-radius-item);
+  --radius-btn: var(--voga-radius-btn);
+  --radius-lg: var(--voga-radius-lg);
+  --radius-xl: var(--voga-radius-xl);
+  --radius-section: var(--voga-radius-section);
+
+  /* Elevação */
+  --shadow-e1: var(--voga-e1);
+  --shadow-e2: var(--voga-e2);
+  --shadow-e3: var(--voga-e3);
+
+  /* Régua de controle */
+  --height-control-sm: var(--voga-control-h-sm);
+  --height-control-md: var(--voga-control-h-md);
+  --height-control-lg: var(--voga-control-h-lg);
+
+  /* Movimento */
+  --ease-out: var(--voga-out);
+  --ease-spring: var(--voga-spring);
+  --ease-drawer: var(--voga-drawer);
+
+  --animate-in: voga-in var(--voga-dur-base) var(--voga-out);
+  --animate-out: voga-out var(--voga-dur-fast) var(--voga-out);
+  --animate-rise: voga-rise var(--voga-dur-base) var(--voga-out);
+  --animate-pulse-soft: voga-pulse-soft 1.4s ease-in-out infinite;
+  --animate-spin: voga-spin 800ms linear infinite;
+}
+
+/* Variante `dark:` que respeita tanto o sistema quanto [data-theme] */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+}
+
+/* Entradas só: fechar é imediato. */
+@keyframes voga-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes voga-out { from { opacity: 1 } to { opacity: 0 } }
+@keyframes voga-rise {
+  from { opacity: 0; transform: translateY(6px) scale(0.985) }
+  to { opacity: 1; transform: none }
+}
+@keyframes voga-pulse-soft { 0%, 100% { opacity: 1 } 50% { opacity: 0.45 } }
+@keyframes voga-spin { to { transform: rotate(360deg) } }

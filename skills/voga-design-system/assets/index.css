@@ -1,0 +1,22 @@
+/* ==========================================================================
+   Voga — ponto de entrada único.
+
+   Sem Tailwind, em qualquer projeto:
+     @import "@voga/ui/styles.css";
+
+   Com Tailwind v4, para ganhar também os utilitários (bg-raised, text-muted…):
+     @import "tailwindcss";
+     @import "@voga/ui/styles.css";
+
+   Fontes (Onest + Martian Mono), no <head>:
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400..800&family=Martian+Mono:wght@400;500&display=swap">
+   ========================================================================== */
+
+@import "./tokens.css";
+@import "./theme.css";
+@import "./base.css";
+@import "./components.css";
+@import "./components-overlay.css";
+@import "./components-nav.css";
+@import "./components-data.css";

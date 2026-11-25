@@ -1,0 +1,247 @@
+/* ==========================================================================
+   Voga — sobreposições
+   Tudo que flutua: popover, hover card, painel lateral, gaveta, paleta,
+   menu de contexto, barra de menus, torrada. Vidro em e3, entrada que sobe,
+   fechamento imediato.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Popover e hover card — vidro, raio de card.
+   -------------------------------------------------------------------------- */
+
+.voga-popover {
+  --voga-pop-pad: var(--voga-space-4);
+  z-index: var(--voga-z-dropdown);
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(360px, calc(100vw - 2 * var(--voga-space-4)));
+  padding: var(--voga-pop-pad);
+  font-size: var(--voga-text-md);
+  line-height: 21px;
+}
+.voga-popover[data-state="open"] { animation: var(--voga-dur-base) var(--voga-out) voga-rise; }
+.voga-popover__arrow { fill: var(--voga-glass-solid); }
+
+.voga-hovercard {
+  z-index: var(--voga-z-dropdown);
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(320px, calc(100vw - 2 * var(--voga-space-4)));
+  padding: var(--voga-space-3) var(--voga-space-4);
+  font-size: var(--voga-text-md);
+  line-height: 21px;
+}
+.voga-hovercard[data-state="open"] { animation: var(--voga-dur-base) var(--voga-out) voga-rise; }
+
+/* --------------------------------------------------------------------------
+   Painel lateral e gaveta — desliza com a curva de painel.
+   -------------------------------------------------------------------------- */
+
+.voga-sheet {
+  position: fixed;
+  z-index: var(--voga-z-modal);
+  display: flex;
+  flex-direction: column;
+  gap: var(--voga-space-4);
+  box-sizing: border-box;
+  padding: var(--voga-space-6);
+  background: var(--voga-raised);
+  box-shadow: var(--voga-e3);
+  overflow-y: auto;
+}
+.voga-sheet[data-side="right"],
+.voga-sheet[data-side="left"] {
+  inset-block: 0;
+  width: min(420px, calc(100vw - var(--voga-space-8)));
+}
+.voga-sheet[data-side="right"] { right: 0; border-top-left-radius: var(--voga-radius-section); border-bottom-left-radius: var(--voga-radius-section); }
+.voga-sheet[data-side="left"] { left: 0; border-top-right-radius: var(--voga-radius-section); border-bottom-right-radius: var(--voga-radius-section); }
+.voga-sheet[data-side="top"],
+.voga-sheet[data-side="bottom"] {
+  inset-inline: 0;
+  max-height: 85vh;
+}
+.voga-sheet[data-side="top"] { top: 0; border-bottom-left-radius: var(--voga-radius-section); border-bottom-right-radius: var(--voga-radius-section); }
+.voga-sheet[data-side="bottom"] { bottom: 0; border-top-left-radius: var(--voga-radius-section); border-top-right-radius: var(--voga-radius-section); }
+
+.voga-sheet[data-state="open"][data-side="right"] { animation: var(--voga-dur-panel) var(--voga-drawer) voga-slide-right; }
+.voga-sheet[data-state="open"][data-side="left"] { animation: var(--voga-dur-panel) var(--voga-drawer) voga-slide-left; }
+.voga-sheet[data-state="open"][data-side="top"] { animation: var(--voga-dur-panel) var(--voga-drawer) voga-slide-top; }
+.voga-sheet[data-state="open"][data-side="bottom"] { animation: var(--voga-dur-panel) var(--voga-drawer) voga-slide-bottom; }
+
+@keyframes voga-slide-right { from { transform: translateX(100%) } to { transform: none } }
+@keyframes voga-slide-left { from { transform: translateX(-100%) } to { transform: none } }
+@keyframes voga-slide-top { from { transform: translateY(-100%) } to { transform: none } }
+@keyframes voga-slide-bottom { from { transform: translateY(100%) } to { transform: none } }
+
+.voga-sheet__close { position: absolute; top: var(--voga-space-3); right: var(--voga-space-3); }
+
+/* Gaveta do telefone: puxa de baixo, com a alça. */
+.voga-drawer {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: var(--voga-z-modal);
+  display: flex;
+  flex-direction: column;
+  gap: var(--voga-space-4);
+  box-sizing: border-box;
+  max-height: 88vh;
+  padding: var(--voga-space-3) var(--voga-space-6) var(--voga-space-6);
+  border-top-left-radius: var(--voga-radius-section);
+  border-top-right-radius: var(--voga-radius-section);
+  background: var(--voga-raised);
+  box-shadow: var(--voga-e3);
+  overflow-y: auto;
+}
+.voga-drawer__grip {
+  flex: none;
+  align-self: center;
+  width: 40px;
+  height: 4px;
+  margin-bottom: var(--voga-space-2);
+  border-radius: var(--voga-radius-full);
+  background: var(--voga-line-strong);
+  opacity: 0.5;
+}
+
+/* --------------------------------------------------------------------------
+   Paleta de comandos — vidro, raio de seção, busca no topo.
+   -------------------------------------------------------------------------- */
+
+.voga-palette {
+  --voga-palette-pad: var(--voga-space-2);
+  position: fixed;
+  left: 50%;
+  top: calc(env(safe-area-inset-top, 0px) + 12vh);
+  z-index: var(--voga-z-modal);
+  box-sizing: border-box;
+  width: min(620px, calc(100vw - 2 * var(--voga-space-8)));
+  padding: var(--voga-palette-pad);
+  transform: translateX(-50%);
+  border-radius: var(--voga-radius-section);
+  overflow: hidden;
+}
+.voga-palette[data-state="open"] { animation: var(--voga-dur-base) var(--voga-out) voga-palette-in; }
+@keyframes voga-palette-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(0.985) }
+  to { opacity: 1; transform: translateX(-50%) }
+}
+
+.voga-palette__search {
+  display: flex;
+  align-items: center;
+  gap: var(--voga-icon-gap);
+  padding: 0 var(--voga-space-2);
+  border-bottom: 1px solid var(--voga-line);
+}
+.voga-palette__search > .voga-icon { width: 18px; height: 18px; color: var(--voga-muted); }
+.voga-palette__input {
+  flex: 1;
+  min-width: 0;
+  height: var(--voga-control-h-lg);
+  border: 0;
+  background: none;
+  color: var(--voga-ink);
+  font: inherit;
+  font-size: var(--voga-text-lg);
+  outline: none;
+}
+.voga-palette__input::placeholder { color: var(--voga-muted); }
+
+.voga-palette__list {
+  max-height: 50vh;
+  padding-top: var(--voga-space-1);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.voga-palette__group { padding-top: var(--voga-space-1); }
+.voga-palette__empty {
+  padding: var(--voga-space-6) var(--voga-space-2);
+  color: var(--voga-muted);
+  font-size: var(--voga-text-md);
+  text-align: center;
+}
+.voga-palette__item {
+  display: flex;
+  align-items: center;
+  gap: var(--voga-icon-gap);
+  min-height: var(--voga-control-h-md);
+  padding: 0 var(--voga-space-2);
+  border-radius: calc(var(--voga-radius-section) - var(--voga-palette-pad) - 4px);
+  color: var(--voga-ink);
+  font-size: var(--voga-text-md);
+  cursor: pointer;
+  user-select: none;
+}
+.voga-palette__item > .voga-icon { width: 18px; height: 18px; color: var(--voga-muted); }
+.voga-palette__item[data-selected="true"] { background: var(--voga-plate); }
+.voga-palette__item[data-disabled="true"] { color: var(--voga-muted); cursor: not-allowed; }
+
+/* --------------------------------------------------------------------------
+   Torrada — vidro pequeno, canto da tela.
+   -------------------------------------------------------------------------- */
+
+.voga-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--voga-space-3);
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--voga-space-3) var(--voga-space-4);
+  border-radius: var(--voga-radius-lg);
+  font-size: var(--voga-text-md);
+  line-height: 21px;
+}
+.voga-toast__title { font-weight: 600; color: var(--voga-ink); }
+.voga-toast__desc { color: var(--voga-muted); }
+.voga-toast > .voga-icon { margin-top: 1px; width: 18px; height: 18px; color: var(--voga-muted); }
+.voga-toast--ok > .voga-icon { color: var(--voga-ok); }
+.voga-toast--attention > .voga-icon { color: var(--voga-attention); }
+.voga-toast--danger > .voga-icon { color: var(--voga-danger); }
+
+/* --------------------------------------------------------------------------
+   Dobra — acordeão e revelação. Hairline entre as linhas, nunca na última.
+   -------------------------------------------------------------------------- */
+
+.voga-fold { border-top: 1px solid var(--voga-line); }
+.voga-fold:last-child { border-bottom: 1px solid var(--voga-line); }
+
+.voga-fold__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--voga-space-3);
+  width: 100%;
+  padding: var(--voga-space-3) 0;
+  border: 0;
+  background: none;
+  color: var(--voga-ink);
+  font: inherit;
+  font-size: var(--voga-text-md);
+  font-weight: 600;
+  letter-spacing: var(--voga-track-tight);
+  text-align: left;
+  cursor: pointer;
+}
+.voga-fold__trigger > .voga-icon {
+  margin-left: auto;
+  width: 18px;
+  height: 18px;
+  color: var(--voga-muted);
+  transition: transform var(--voga-dur-base) var(--voga-out);
+}
+.voga-fold__trigger[data-state="open"] > .voga-icon { transform: rotate(180deg); }
+
+.voga-fold__body { overflow: hidden; }
+.voga-fold__body[data-state="open"] { animation: var(--voga-dur-base) var(--voga-out) voga-fold-open; }
+.voga-fold__body[data-state="closed"] { animation: var(--voga-dur-fast) var(--voga-out) voga-fold-close; }
+.voga-fold__inner { padding-bottom: var(--voga-space-4); color: var(--voga-muted); font-size: var(--voga-text-md); line-height: 21px; }
+
+@keyframes voga-fold-open {
+  from { height: 0 }
+  to { height: var(--radix-accordion-content-height, var(--radix-collapsible-content-height)) }
+}
+@keyframes voga-fold-close {
+  from { height: var(--radix-accordion-content-height, var(--radix-collapsible-content-height)) }
+  to { height: 0 }
+}

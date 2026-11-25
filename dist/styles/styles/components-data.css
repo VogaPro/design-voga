@@ -1,0 +1,682 @@
+/* ==========================================================================
+   Voga — dados e medida
+   Tabela, medidor, passos, deslizador, rádio, calendário, carrossel, área de
+   rolagem, proporção, painéis redimensionáveis, grupo de campo, código,
+   alternador, texto corrido.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Tabela — cabeçalho no poço, hairline entre as linhas, número alinhado.
+   -------------------------------------------------------------------------- */
+
+.voga-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--voga-radius-lg);
+  background: var(--voga-raised);
+  box-shadow: var(--voga-e1), var(--voga-top);
+}
+.voga-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--voga-text-md);
+  font-variant-numeric: tabular-nums;
+}
+.voga-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: var(--voga-space-2) var(--voga-space-3);
+  background: var(--voga-sunken);
+  border-bottom: 1px solid var(--voga-line-2);
+  color: var(--voga-muted);
+  font-size: var(--voga-text-sm);
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+.voga-table tbody tr + tr > td { border-top: 1px solid var(--voga-line); }
+.voga-table td { padding: var(--voga-row-py) var(--voga-space-3); vertical-align: middle; }
+.voga-table tbody tr { transition: background-color var(--voga-dur-fast) var(--voga-out); }
+.voga-table--hover tbody tr:hover { background: var(--voga-plate-soft); }
+.voga-table tbody tr[data-state="selected"] { background: var(--voga-plate); }
+.voga-table [data-align="end"] { text-align: right; }
+.voga-table [data-align="center"] { text-align: center; }
+.voga-table tfoot td {
+  border-top: 1px solid var(--voga-line-2);
+  background: var(--voga-sunken);
+  font-weight: 600;
+}
+.voga-table caption {
+  padding: var(--voga-space-3);
+  color: var(--voga-muted);
+  font-size: var(--voga-text-sm);
+  text-align: left;
+  caption-side: bottom;
+}
+
+/* --------------------------------------------------------------------------
+   Medidor e passos.
+
+   O trilho é uma tinta translúcida, não uma superfície: assim ele aparece
+   igual num card elevado e num poço.
+   -------------------------------------------------------------------------- */
+
+.voga-meter {
+  position: relative;
+  height: 8px;
+  border-radius: var(--voga-radius-full);
+  background: color-mix(in oklab, var(--voga-ink) 10%, transparent);
+  overflow: hidden;
+}
+.voga-meter--thin { height: 4px; }
+.voga-meter__bar {
+  height: 100%;
+  border-radius: var(--voga-radius-full);
+  background: var(--voga-meter-fill, var(--voga-ink));
+  transition: transform var(--voga-dur-panel) var(--voga-out);
+  transform-origin: left center;
+}
+.voga-meter__mark {
+  position: absolute;
+  inset-block: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--voga-raised);
+}
+.voga-meter--attention { --voga-meter-fill: var(--voga-attention); }
+.voga-meter--danger { --voga-meter-fill: var(--voga-danger); }
+.voga-meter--ok { --voga-meter-fill: var(--voga-ok); }
+
+/* Indeterminado: a tinta atravessa o trilho. Parada com movimento reduzido. */
+.voga-meter--loading .voga-meter__bar {
+  width: 40%;
+  opacity: 0.6;
+  transform: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .voga-meter--loading .voga-meter__bar { animation: 1.4s ease-in-out infinite voga-meter-travel; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .voga-meter--loading .voga-meter__bar { width: 100%; opacity: 0.35; }
+}
+@keyframes voga-meter-travel {
+  0% { transform: translateX(-100%) }
+  100% { transform: translateX(250%) }
+}
+
+.voga-steps { display: flex; gap: var(--voga-space-1); }
+.voga-steps__bar {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  border-radius: var(--voga-radius-full);
+  background: color-mix(in oklab, var(--voga-ink) 10%, transparent);
+  overflow: hidden;
+}
+.voga-steps__bar[data-done="true"] { background: var(--voga-ink); }
+.voga-steps__bar[data-current="true"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  border-radius: inherit;
+  background: var(--voga-ink);
+  opacity: 0.6;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .voga-steps__bar[data-current="true"]::before { animation: 1.4s ease-in-out infinite voga-meter-travel; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .voga-steps__bar[data-current="true"]::before { width: 100%; opacity: 0.35; }
+}
+
+/* --------------------------------------------------------------------------
+   Deslizador — trilho de tinta translúcida, polegar que se levanta.
+   -------------------------------------------------------------------------- */
+
+.voga-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--voga-control-h-md);
+  touch-action: none;
+  user-select: none;
+}
+.voga-slider[data-orientation="vertical"] {
+  flex-direction: column;
+  width: var(--voga-control-h-md);
+  height: 160px;
+}
+.voga-slider__track {
+  position: relative;
+  flex-grow: 1;
+  border-radius: var(--voga-radius-full);
+  background: color-mix(in oklab, var(--voga-ink) 10%, transparent);
+}
+.voga-slider[data-orientation="horizontal"] .voga-slider__track { height: 4px; }
+.voga-slider[data-orientation="vertical"] .voga-slider__track { width: 4px; }
+.voga-slider__range {
+  position: absolute;
+  border-radius: var(--voga-radius-full);
+  background: var(--voga-ink);
+}
+.voga-slider[data-orientation="horizontal"] .voga-slider__range { height: 100%; }
+.voga-slider[data-orientation="vertical"] .voga-slider__range { width: 100%; }
+.voga-slider__thumb {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--voga-radius-full);
+  background: var(--voga-raised);
+  box-shadow: var(--voga-thumb-lift), 0 0 0 1px var(--voga-line-strong);
+  transition: transform var(--voga-dur-fast) var(--voga-spring);
+}
+.voga-slider__thumb:hover { transform: scale(1.08); }
+.voga-slider__thumb:active { transform: scale(0.96); }
+.voga-slider[data-disabled] { opacity: 0.5; }
+
+/* --------------------------------------------------------------------------
+   Rádio — círculo; marcado é tinta, nunca cor.
+   -------------------------------------------------------------------------- */
+
+.voga-radio {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--voga-line-strong);
+  border-radius: var(--voga-radius-full);
+  background: var(--voga-raised);
+  cursor: pointer;
+  transition: border-color var(--voga-dur-fast) var(--voga-out);
+}
+.voga-radio[data-state="checked"] { border-color: var(--voga-action); border-width: 1.5px; }
+.voga-radio[data-disabled] { cursor: not-allowed; opacity: 0.5; }
+.voga-radio__dot {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-radius: var(--voga-radius-full);
+  background: var(--voga-action);
+  transform: scale(0);
+  transition: transform var(--voga-dur-base) var(--voga-spring);
+}
+.voga-radio[data-state="checked"] .voga-radio__dot { transform: scale(1); }
+
+.voga-radios { display: flex; flex-direction: column; gap: var(--voga-space-1); }
+
+/* Cartão de escolha: a linha inteira é o alvo; escolhido afunda, não pinta. */
+.voga-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--voga-space-3);
+  padding: var(--voga-space-3);
+  border-radius: var(--voga-radius-item);
+  background: var(--voga-raised);
+  box-shadow: inset 0 0 0 1px var(--voga-line-2);
+  cursor: pointer;
+  transition: box-shadow var(--voga-dur-fast) var(--voga-out), background-color var(--voga-dur-fast) var(--voga-out);
+}
+.voga-choice:hover { box-shadow: inset 0 0 0 1px var(--voga-line-strong); }
+.voga-choice[data-state="checked"] { background: var(--voga-chosen-bg); box-shadow: var(--voga-chosen-shadow); }
+.voga-choice__main { flex: 1; min-width: 0; }
+.voga-choice__title { font-size: var(--voga-text-md); font-weight: 600; }
+.voga-choice__desc { margin-top: 2px; font-size: var(--voga-text-sm); color: var(--voga-muted); }
+
+/* --------------------------------------------------------------------------
+   Calendário — 280px, com a folga do menu, então os dias dos cantos ficam
+   concêntricos com a caixa.
+   -------------------------------------------------------------------------- */
+
+.voga-calendar {
+  --voga-menu-pad: var(--voga-space-2);
+  width: 280px;
+  padding: var(--voga-space-2);
+  font-size: var(--voga-text-md);
+}
+.voga-calendar__months { display: flex; flex-direction: column; gap: var(--voga-space-3); }
+.voga-calendar__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--voga-control-h-sm);
+  padding-bottom: var(--voga-space-1);
+}
+.voga-calendar__title {
+  font-size: var(--voga-text-md);
+  font-weight: 600;
+  letter-spacing: var(--voga-track-tight);
+  text-transform: capitalize;
+}
+/* As setas flutuam nas pontas da linha do mês, concêntricas com a caixa. */
+.voga-calendar__arrows {
+  position: absolute;
+  inset-inline: var(--voga-space-2);
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.voga-calendar__arrows > * { pointer-events: auto; }
+.voga-calendar__grid { width: 100%; border-collapse: collapse; }
+.voga-calendar__weekday {
+  padding-bottom: var(--voga-space-1);
+  color: var(--voga-faint);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--voga-track-label);
+}
+.voga-calendar__cell { padding: 1px; text-align: center; }
+.voga-calendar__day {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-inline: auto;
+  border: 0;
+  border-radius: var(--voga-radius-item);
+  background: transparent;
+  color: var(--voga-ink);
+  font: inherit;
+  font-size: var(--voga-text-md);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background-color var(--voga-dur-fast) var(--voga-out);
+}
+.voga-calendar__day:hover { background: var(--voga-plate); }
+
+/*
+ * As marcações do react-day-picker vêm como data-attribute na CÉLULA, não no
+ * botão — então cada regra desce da célula para o botão dentro dela.
+ */
+.voga-calendar__cell[data-today] .voga-calendar__day {
+  box-shadow: inset 0 0 0 1px var(--voga-line-strong);
+  font-weight: 600;
+}
+.voga-calendar__cell[data-selected] .voga-calendar__day {
+  background: var(--voga-action);
+  color: var(--voga-on-action);
+  font-weight: 600;
+}
+.voga-calendar__cell[data-outside] .voga-calendar__day { color: var(--voga-faint); opacity: 0.6; }
+.voga-calendar__cell[data-disabled] .voga-calendar__day {
+  color: var(--voga-faint);
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.voga-calendar__cell[data-disabled] .voga-calendar__day:hover { background: transparent; }
+.voga-calendar__cell[data-hidden] { visibility: hidden; }
+
+/* Intervalo: as pontas guardam o raio virado para dentro, o meio é reto. */
+.voga-calendar__cell--mid .voga-calendar__day {
+  border-radius: 0;
+  background: var(--voga-plate);
+  color: var(--voga-ink);
+  font-weight: 400;
+}
+.voga-calendar__cell--start .voga-calendar__day { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.voga-calendar__cell--end .voga-calendar__day { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+
+.voga-calendar__foot {
+  padding: var(--voga-space-2) var(--voga-space-2) 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--voga-space-2);
+  margin-top: var(--voga-space-2);
+  padding-top: var(--voga-space-2);
+  border-top: 1px solid var(--voga-line);
+}
+
+/* --------------------------------------------------------------------------
+   Carrossel — uma fileira que desliza. As setas flutuam nas bordas e a
+   fileira some sob elas, só do lado onde ainda há coisa para ver.
+   -------------------------------------------------------------------------- */
+
+.voga-carousel { position: relative; min-width: 0; }
+.voga-carousel__viewport { overflow: hidden; }
+.voga-carousel__track { display: flex; gap: var(--voga-space-3); }
+.voga-carousel__slide { flex: 0 0 auto; min-width: 0; }
+.voga-carousel[data-more="end"] .voga-carousel__viewport { mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); }
+.voga-carousel[data-more="start"] .voga-carousel__viewport { mask-image: linear-gradient(to right, transparent, #000 56px); }
+.voga-carousel[data-more="both"] .voga-carousel__viewport {
+  mask-image: linear-gradient(to right, transparent, #000 56px, #000 calc(100% - 56px), transparent);
+}
+.voga-carousel__arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  transform: translateY(-50%);
+}
+.voga-carousel__arrow--prev { left: 0; }
+.voga-carousel__arrow--next { right: 0; }
+
+/* --------------------------------------------------------------------------
+   Área de rolagem — barra fina de tinta, aparece ao aproximar.
+   -------------------------------------------------------------------------- */
+
+.voga-scroll { position: relative; overflow: hidden; }
+.voga-scroll__viewport { width: 100%; height: 100%; border-radius: inherit; }
+.voga-scroll__bar {
+  display: flex;
+  padding: 2px;
+  background: transparent;
+  transition: background-color var(--voga-dur-base) var(--voga-out);
+  touch-action: none;
+  user-select: none;
+}
+.voga-scroll__bar:hover { background: var(--voga-plate-soft); }
+.voga-scroll__bar[data-orientation="vertical"] { width: 10px; }
+.voga-scroll__bar[data-orientation="horizontal"] { flex-direction: column; height: 10px; }
+.voga-scroll__thumb {
+  position: relative;
+  flex: 1;
+  border-radius: var(--voga-radius-full);
+  background: color-mix(in oklab, var(--voga-ink) 28%, transparent);
+}
+.voga-scroll__thumb:hover { background: color-mix(in oklab, var(--voga-ink) 42%, transparent); }
+
+/* --------------------------------------------------------------------------
+   Proporção e painéis redimensionáveis.
+   -------------------------------------------------------------------------- */
+
+.voga-ratio { position: relative; width: 100%; overflow: hidden; border-radius: var(--voga-radius-lg); }
+.voga-ratio > * { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+.voga-panels { display: flex; width: 100%; }
+.voga-panel { min-width: 0; overflow: hidden; }
+.voga-handle {
+  position: relative;
+  flex: none;
+  background: var(--voga-line);
+  transition: background-color var(--voga-dur-fast) var(--voga-out);
+}
+.voga-handle[data-panel-group-direction="horizontal"] { width: 1px; }
+.voga-handle[data-panel-group-direction="vertical"] { height: 1px; }
+.voga-handle::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+}
+.voga-handle:hover,
+.voga-handle[data-resize-handle-state="drag"] { background: var(--voga-line-strong); }
+.voga-handle__grip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 14px;
+  height: 22px;
+  transform: translate(-50%, -50%);
+  border-radius: var(--voga-radius-xs);
+  background: var(--voga-raised);
+  box-shadow: var(--voga-e1);
+  color: var(--voga-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Grupo de campo — prefixo, campo e sufixo como um controle só.
+   Cantos concêntricos: o raio de dentro é o de fora.
+   -------------------------------------------------------------------------- */
+
+.voga-ingroup {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--voga-line-strong);
+  border-radius: var(--voga-control-r-md);
+  background: var(--voga-raised);
+  transition: border-color var(--voga-dur-fast) var(--voga-out), box-shadow var(--voga-dur-fast) var(--voga-out);
+}
+.voga-ingroup:hover { border-color: var(--voga-ink-2); }
+html:not([data-pointer]) .voga-ingroup:focus-within { box-shadow: var(--voga-focus-ring); }
+.voga-ingroup[data-invalid="true"] { border-color: var(--voga-danger); }
+.voga-ingroup > .voga-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+html:not([data-pointer]) .voga-ingroup > .voga-input:focus-visible { box-shadow: none; }
+.voga-ingroup__affix {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--voga-icon-gap-sm);
+  padding-inline: var(--voga-control-px-md);
+  color: var(--voga-muted);
+  font-size: var(--voga-control-fs-md);
+  white-space: nowrap;
+}
+.voga-ingroup__affix > .voga-icon { width: 18px; height: 18px; }
+.voga-ingroup__affix--boxed { background: var(--voga-sunken); }
+.voga-ingroup__affix--boxed:first-child {
+  border-right: 1px solid var(--voga-line);
+  border-top-left-radius: calc(var(--voga-control-r-md) - 1px);
+  border-bottom-left-radius: calc(var(--voga-control-r-md) - 1px);
+}
+.voga-ingroup__affix--boxed:last-child {
+  border-left: 1px solid var(--voga-line);
+  border-top-right-radius: calc(var(--voga-control-r-md) - 1px);
+  border-bottom-right-radius: calc(var(--voga-control-r-md) - 1px);
+}
+/* Um botão dentro do grupo não repete a borda do grupo. */
+.voga-ingroup > .voga-btn {
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+.voga-ingroup > .voga-btn:last-child {
+  border-top-right-radius: calc(var(--voga-control-r-md) - 1px);
+  border-bottom-right-radius: calc(var(--voga-control-r-md) - 1px);
+}
+
+/* --------------------------------------------------------------------------
+   Código de verificação — casas na régua, algarismos tabulares.
+   -------------------------------------------------------------------------- */
+
+.voga-code { display: flex; align-items: center; gap: var(--voga-space-2); }
+.voga-code__slot {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: var(--voga-control-h-md);
+  border: 1px solid var(--voga-line-strong);
+  border-radius: var(--voga-control-r-md);
+  background: var(--voga-raised);
+  color: var(--voga-ink);
+  font-size: var(--voga-text-lg);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--voga-dur-fast) var(--voga-out), box-shadow var(--voga-dur-fast) var(--voga-out);
+}
+.voga-code__slot[data-active="true"] {
+  border-color: var(--voga-ink-2);
+  box-shadow: var(--voga-focus-ring);
+}
+.voga-code__sep { color: var(--voga-faint); }
+.voga-code__caret {
+  width: 1.5px;
+  height: 18px;
+  background: var(--voga-ink);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .voga-code__caret { animation: 1s steps(2, jump-none) infinite voga-blink; }
+}
+@keyframes voga-blink { 50% { opacity: 0 } }
+
+/* --------------------------------------------------------------------------
+   Alternador — um item de segmentado que vive sozinho.
+   -------------------------------------------------------------------------- */
+
+.voga-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--voga-icon-gap-sm);
+  height: var(--voga-control-h-md);
+  padding-inline: var(--voga-control-px-md);
+  border: 0;
+  border-radius: var(--voga-control-r-md);
+  background: transparent;
+  color: var(--voga-muted);
+  font: inherit;
+  font-size: var(--voga-control-fs-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--voga-dur-fast) var(--voga-out), color var(--voga-dur-fast) var(--voga-out), box-shadow var(--voga-dur-fast) var(--voga-out);
+}
+.voga-toggle > .voga-icon { width: var(--voga-control-icon-md); height: var(--voga-control-icon-md); }
+.voga-toggle:hover { background: var(--voga-plate); color: var(--voga-ink); }
+.voga-toggle[data-state="on"] {
+  background: var(--voga-chosen-bg);
+  box-shadow: var(--voga-chosen-shadow);
+  color: var(--voga-ink);
+}
+.voga-toggle[data-disabled] { cursor: not-allowed; opacity: 0.5; }
+.voga-toggle--sm {
+  height: var(--voga-control-h-sm);
+  padding-inline: var(--voga-control-px-sm);
+  border-radius: var(--voga-control-r-sm);
+  font-size: var(--voga-control-fs-sm);
+}
+.voga-toggle--sm > .voga-icon { width: var(--voga-control-icon-sm); height: var(--voga-control-icon-sm); }
+.voga-toggle--icon { width: var(--voga-control-h-md); padding: 0; }
+.voga-toggle--icon.voga-toggle--sm { width: var(--voga-control-h-sm); }
+
+/* --------------------------------------------------------------------------
+   Texto corrido — para o que vem de markdown ou de um CMS.
+   65 caracteres por linha, que é onde o olho não se perde.
+   -------------------------------------------------------------------------- */
+
+.voga-prose {
+  max-width: 68ch;
+  color: var(--voga-ink-2);
+  font-size: var(--voga-text-base);
+  line-height: 1.65;
+}
+.voga-prose > * + * { margin-top: var(--voga-space-4); }
+.voga-prose h1,
+.voga-prose h2,
+.voga-prose h3 { color: var(--voga-ink); }
+.voga-prose > h2 { margin-top: var(--voga-space-8); }
+.voga-prose > h3 { margin-top: var(--voga-space-6); }
+.voga-prose > h2 + *,
+.voga-prose > h3 + * { margin-top: var(--voga-space-2); }
+.voga-prose a {
+  color: var(--voga-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--voga-line-strong);
+  text-underline-offset: 3px;
+}
+.voga-prose a:hover { text-decoration-color: currentColor; }
+.voga-prose strong { font-weight: 650; color: var(--voga-ink); }
+.voga-prose ul,
+.voga-prose ol { padding-left: var(--voga-space-6); }
+.voga-prose li + li { margin-top: var(--voga-space-1); }
+.voga-prose ul { list-style: disc; }
+.voga-prose ol { list-style: decimal; }
+.voga-prose li::marker { color: var(--voga-faint); }
+.voga-prose blockquote {
+  padding-left: var(--voga-space-4);
+  border-left: 2px solid var(--voga-line-2);
+  color: var(--voga-muted);
+}
+.voga-prose code {
+  padding: 1px 5px;
+  border-radius: var(--voga-radius-xs);
+  background: color-mix(in oklab, var(--voga-ink) 8%, transparent);
+  font-size: 0.88em;
+}
+.voga-prose pre {
+  padding: var(--voga-space-3) var(--voga-space-4);
+  border-radius: var(--voga-radius-item);
+  background: var(--voga-sunken);
+  box-shadow: inset 0 0 0 1px var(--voga-line);
+  overflow-x: auto;
+  line-height: 1.55;
+}
+.voga-prose pre code { padding: 0; background: none; font-size: var(--voga-text-sm); }
+.voga-prose hr { border: 0; border-top: 1px solid var(--voga-line); }
+.voga-prose img { max-width: 100%; border-radius: var(--voga-radius-lg); }
+.voga-prose table { width: 100%; border-collapse: collapse; font-size: var(--voga-text-md); }
+.voga-prose th,
+.voga-prose td { padding: var(--voga-space-2) var(--voga-space-3); border-bottom: 1px solid var(--voga-line); text-align: left; }
+.voga-prose th { color: var(--voga-muted); font-size: var(--voga-text-sm); font-weight: 600; }
+
+/* --------------------------------------------------------------------------
+   Gráfico — a moldura, a legenda e a dica. As marcas quem desenha é o
+   recharts; daqui saem a cor da série, a grade recessiva e o texto em tinta.
+
+   Regra que não se negocia: texto de gráfico veste token de texto, nunca a cor
+   da série. A marca colorida ao lado é que carrega a identidade.
+   -------------------------------------------------------------------------- */
+
+.voga-chart {
+  --voga-chart-grid: var(--voga-line);
+  width: 100%;
+  font-size: var(--voga-text-sm);
+  font-variant-numeric: tabular-nums;
+}
+.voga-chart svg { overflow: visible; }
+/* Eixo e grade ficam recessivos: a tinta é do dado, não da moldura. */
+.voga-chart .recharts-cartesian-axis-line,
+.voga-chart .recharts-cartesian-axis-tick-line { stroke: var(--voga-line-2); }
+.voga-chart .recharts-cartesian-grid-horizontal line,
+.voga-chart .recharts-cartesian-grid-vertical line { stroke: var(--voga-chart-grid); }
+.voga-chart .recharts-cartesian-axis-tick-value,
+.voga-chart .recharts-label,
+.voga-chart text { fill: var(--voga-faint); font-size: var(--voga-text-xs); }
+.voga-chart .recharts-tooltip-cursor { fill: var(--voga-plate-soft); }
+/* 2px de superfície entre marcas vizinhas e empilhadas. */
+.voga-chart .recharts-bar-rectangle path,
+.voga-chart .recharts-rectangle { stroke: var(--voga-raised); stroke-width: 2; }
+.voga-chart .recharts-line-curve { stroke-width: 2; }
+.voga-chart .recharts-dot { stroke: var(--voga-raised); stroke-width: 2; }
+
+.voga-chart__tip {
+  min-width: 140px;
+  padding: var(--voga-space-2) var(--voga-space-3);
+  border-radius: var(--voga-radius-item);
+  font-size: var(--voga-text-sm);
+}
+.voga-chart__tip-head {
+  margin-bottom: var(--voga-space-1);
+  color: var(--voga-faint);
+  font-size: var(--voga-text-xs);
+  font-weight: 600;
+}
+.voga-chart__tip-row {
+  display: flex;
+  align-items: center;
+  gap: var(--voga-space-2);
+  min-height: 20px;
+}
+.voga-chart__tip-row > span:last-child { margin-left: auto; font-weight: 600; color: var(--voga-ink); }
+.voga-chart__swatch {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+}
+.voga-chart__tip-name { color: var(--voga-muted); }
+
+.voga-chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--voga-space-2) var(--voga-space-4);
+  padding-top: var(--voga-space-3);
+}
+.voga-chart__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--voga-muted);
+  font-size: var(--voga-text-sm);
+}

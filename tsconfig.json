@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@voga/ui": [
+        "src/index.ts"
+      ],
+      "@voga/ui/chart": [
+        "src/chart/index.tsx"
+      ],
+      "@voga/ui/form": [
+        "src/form/index.tsx"
+      ],
+      "@voga/ui/data-table": [
+        "src/data-table/index.tsx"
+      ]
+    },
+    "noEmit": true,
+    "types": [
+      "bun"
+    ]
+  },
+  "include": [
+    "src",
+    "playground/src",
+    "scripts"
+  ]
+}

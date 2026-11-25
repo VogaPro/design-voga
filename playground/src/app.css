@@ -1,0 +1,23 @@
+@import "tailwindcss";
+@import "../../src/styles/index.css";
+
+/* Só o chrome do playground — nada daqui faz parte do sistema. */
+.pg-shell { max-width: 1040px; margin-inline: auto; padding-inline: 16px; }
+.pg-pane {
+  border-radius: var(--voga-radius-section);
+  background: var(--voga-pane);
+  box-shadow: var(--voga-e1), var(--voga-top);
+  overflow: hidden;
+}
+.pg-pane > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--voga-space-2);
+  padding: var(--voga-space-3) var(--voga-space-4);
+  border-bottom: 1px solid var(--voga-line);
+  background: var(--voga-sunken);
+}
+.pg-swatch { height: 44px; border-radius: var(--voga-radius-item); box-shadow: inset 0 0 0 1px var(--voga-line-2); }
+.pg-section { padding-block: 40px; border-top: 1px solid var(--voga-line); scroll-margin-top: 72px; }
