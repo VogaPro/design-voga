@@ -24,7 +24,14 @@ export function Avatar({ className, src, fallback, size = "md", mark, alt, ...pr
       {...props}
     >
       {src ? <AvatarPrimitive.Image src={src} alt={alt ?? ""} /> : null}
-      <AvatarPrimitive.Fallback delayMs={src ? 300 : 0}>{fallback}</AvatarPrimitive.Fallback>
+      {/*
+        Sem `src` o atraso é `undefined`, e NÃO zero: o Radix só liga o
+        fallback depois de um `setTimeout` quando `delayMs` vem definido —
+        mesmo valendo 0. Com um avatar que nunca terá imagem isso é um quadro
+        em branco no navegador e um fallback que NUNCA aparece em jsdom, onde
+        a asserção corre antes do timer. `undefined` o desenha de primeira.
+      */}
+      <AvatarPrimitive.Fallback delayMs={src ? 300 : undefined}>{fallback}</AvatarPrimitive.Fallback>
     </AvatarPrimitive.Root>
   );
 }

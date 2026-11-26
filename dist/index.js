@@ -733,7 +733,7 @@ function Avatar({ className, src, fallback, size = "md", mark, alt, ...props }) 
       ...props,
       children: [
         src ? /* @__PURE__ */ jsx(AvatarPrimitive.Image, { src, alt: alt ?? "" }) : null,
-        /* @__PURE__ */ jsx(AvatarPrimitive.Fallback, { delayMs: src ? 300 : 0, children: fallback })
+        /* @__PURE__ */ jsx(AvatarPrimitive.Fallback, { delayMs: src ? 300 : void 0, children: fallback })
       ]
     }
   );
