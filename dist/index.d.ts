@@ -513,7 +513,15 @@ declare function Pagination({ className, page, pages, onChange, around, ...props
  * Barra lateral. Papel próprio (`--voga-side`), e a linha escolhida é um
  * degrau de tinta nesse papel — nunca uma cor.
  */
-declare function Sidebar({ className, ...props }: React.ComponentPropsWithoutRef<"nav">): React.JSX.Element;
+interface SidebarProps extends React.ComponentPropsWithoutRef<"nav"> {
+    /**
+     * Régua `sm` (32) no lugar de `md` (40). Para o produto com muitos módulos:
+     * uma barra de 24 entradas a 40px não cabe na janela, e rolar a navegação é
+     * pior que apertá-la. O alvo de toque continua 44 — ele cresce por fora.
+     */
+    compact?: boolean;
+}
+declare function Sidebar({ className, compact, ...props }: SidebarProps): React.JSX.Element;
 declare function SidebarGroup({ className, ...props }: React.ComponentPropsWithoutRef<"div">): React.JSX.Element;
 declare function SidebarLabel({ className, ...props }: React.ComponentPropsWithoutRef<"p">): React.JSX.Element;
 interface SidebarItemProps extends React.ComponentPropsWithoutRef<"a"> {

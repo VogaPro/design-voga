@@ -887,8 +887,8 @@ function BreadcrumbSeparator({ className, ...props }) {
 function BreadcrumbCurrent({ className, ...props }) {
   return /* @__PURE__ */ jsx("span", { "aria-current": "page", className: cn("voga-crumbs__current", className), ...props });
 }
-function Sidebar({ className, ...props }) {
-  return /* @__PURE__ */ jsx("nav", { className: cn("voga-sidebar", className), ...props });
+function Sidebar({ className, compact, ...props }) {
+  return /* @__PURE__ */ jsx("nav", { className: cn("voga-sidebar", compact && "voga-sidebar--compact", className), ...props });
 }
 function SidebarGroup({ className, ...props }) {
   return /* @__PURE__ */ jsx("div", { className: cn("voga-sidebar__group", className), ...props });

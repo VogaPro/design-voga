@@ -187,6 +187,34 @@
   background: var(--voga-side-chosen);
   font-weight: 600;
 }
+/*
+ * Barra COMPACTA: o item cai para a régua `sm` (32). Existe para o produto com
+ * muitos módulos — uma barra de 24 entradas a 40px não cabe na janela, e
+ * rolar a navegação é pior que apertá-la.
+ *
+ * O alvo de toque continua inteiro: a placa é 32, e o alvo cresce POR FORA em
+ * ponteiro grosso, como nos botões pequenos. Sem isto, compactar a barra
+ * quebraria o dedo de quem usa no telefone.
+ */
+.voga-sidebar--compact .voga-sidebar__item {
+  min-height: var(--voga-control-h-sm);
+  border-radius: var(--voga-control-r-sm);
+  font-size: var(--voga-text-sm);
+}
+.voga-sidebar--compact .voga-sidebar__item > .voga-icon { width: 16px; height: 16px; }
+
+@media (pointer: coarse) {
+  .voga-sidebar--compact .voga-sidebar__item {
+    position: relative;
+  }
+  .voga-sidebar--compact .voga-sidebar__item::after {
+    content: "";
+    position: absolute;
+    inset: calc((var(--voga-touch-target) - 100%) / -2) 0;
+    min-height: var(--voga-touch-target);
+  }
+}
+
 .voga-sidebar__item--sub { min-height: var(--voga-control-h-sm); margin-left: var(--voga-space-6); font-size: var(--voga-text-sm); }
 .voga-sidebar__count { margin-left: auto; }
 

@@ -7,8 +7,17 @@ import { Icon } from "./icon";
  * Barra lateral. Papel próprio (`--voga-side`), e a linha escolhida é um
  * degrau de tinta nesse papel — nunca uma cor.
  */
-export function Sidebar({ className, ...props }: React.ComponentPropsWithoutRef<"nav">) {
-  return <nav className={cn("voga-sidebar", className)} {...props} />;
+export interface SidebarProps extends React.ComponentPropsWithoutRef<"nav"> {
+  /**
+   * Régua `sm` (32) no lugar de `md` (40). Para o produto com muitos módulos:
+   * uma barra de 24 entradas a 40px não cabe na janela, e rolar a navegação é
+   * pior que apertá-la. O alvo de toque continua 44 — ele cresce por fora.
+   */
+  compact?: boolean;
+}
+
+export function Sidebar({ className, compact, ...props }: SidebarProps) {
+  return <nav className={cn("voga-sidebar", compact && "voga-sidebar--compact", className)} {...props} />;
 }
 
 export function SidebarGroup({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
