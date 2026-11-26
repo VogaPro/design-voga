@@ -134,6 +134,20 @@ var MenuCheckboxItem = React11.forwardRef(function MenuCheckboxItem2({ className
     }
   );
 });
+var MenuRadioItem = React11.forwardRef(function MenuRadioItem2({ className, children, ...props }, ref) {
+  return /* @__PURE__ */ jsxs(
+    DropdownMenuPrimitive.RadioItem,
+    {
+      ref,
+      className: cn("voga-menu__item voga-menu__item--indent", className),
+      ...props,
+      children: [
+        /* @__PURE__ */ jsx(DropdownMenuPrimitive.ItemIndicator, { className: "voga-menu__mark", children: /* @__PURE__ */ jsx(Icon, { as: Check, style: { width: 15, height: 15 } }) }),
+        children
+      ]
+    }
+  );
+});
 function MenuLabel({
   className,
   ...props
@@ -1209,4 +1223,4 @@ function Toaster({
   );
 }
 
-export { Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, AspectRatio, Avatar, Breadcrumb, BreadcrumbCurrent, BreadcrumbLink, BreadcrumbSeparator, ButtonGroup, Calendar, Card, CardBody, CardDescription, CardFooter, CardHeader, CardTitle, Carousel, CarouselSlide, Checkbox, Chip, Choice, CodeInput, Collapsible, CollapsibleContent, CollapsibleTrigger, Combobox, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut, ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuSeparator, ContextMenuTrigger, ControlRow, DatePicker, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger, HoverCard, HoverCardContent, HoverCardTrigger, InputAffix, InputGroup, Item5 as Item, ItemDescription, ItemMain, ItemMedia, ItemSide, ItemTitle, Menu, MenuCheckboxItem, MenuContent, MenuGroup, MenuItem, MenuLabel, MenuRadioGroup, MenuSeparator, MenuTrigger, Menubar, MenubarCheckboxItem, MenubarContent, MenubarGroup, MenubarItem, MenubarLabel, MenubarMenu, MenubarSeparator, MenubarTrigger, Meter, NavMenu, NavMenuCard, NavMenuContent, NavMenuItem, NavMenuLink, NavMenuList, NavMenuTrigger, Note, Pane, PaneHandle, Panels, Popover, PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger, Prose, Radio, RadioGroup2 as RadioGroup, Row, Rows, ScrollArea, Segmented, SegmentedItem, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectRoot, SelectSeparator, SelectTrigger, SelectValue, Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger, Shell, ShellMain, Sidebar, SidebarGroup, SidebarItem, SidebarLabel, Slider, SplitButton, Steps, Switch, Tabs, TabsContent, TabsList, TabsTrigger, Tip, TipContent, TipProvider, TipRoot, TipTrigger, Toaster, Toggle, Toolbar, ToolbarButton, ToolbarSeparator, Well, pointerScript, themeScript, trackPointer, useCommandShortcut, useTheme };
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, AspectRatio, Avatar, Breadcrumb, BreadcrumbCurrent, BreadcrumbLink, BreadcrumbSeparator, ButtonGroup, Calendar, Card, CardBody, CardDescription, CardFooter, CardHeader, CardTitle, Carousel, CarouselSlide, Checkbox, Chip, Choice, CodeInput, Collapsible, CollapsibleContent, CollapsibleTrigger, Combobox, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut, ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuSeparator, ContextMenuTrigger, ControlRow, DatePicker, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger, HoverCard, HoverCardContent, HoverCardTrigger, InputAffix, InputGroup, Item5 as Item, ItemDescription, ItemMain, ItemMedia, ItemSide, ItemTitle, Menu, MenuCheckboxItem, MenuContent, MenuGroup, MenuItem, MenuLabel, MenuRadioGroup, MenuRadioItem, MenuSeparator, MenuTrigger, Menubar, MenubarCheckboxItem, MenubarContent, MenubarGroup, MenubarItem, MenubarLabel, MenubarMenu, MenubarSeparator, MenubarTrigger, Meter, NavMenu, NavMenuCard, NavMenuContent, NavMenuItem, NavMenuLink, NavMenuList, NavMenuTrigger, Note, Pane, PaneHandle, Panels, Popover, PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger, Prose, Radio, RadioGroup2 as RadioGroup, Row, Rows, ScrollArea, Segmented, SegmentedItem, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectRoot, SelectSeparator, SelectTrigger, SelectValue, Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger, Shell, ShellMain, Sidebar, SidebarGroup, SidebarItem, SidebarLabel, Slider, SplitButton, Steps, Switch, Tabs, TabsContent, TabsList, TabsTrigger, Tip, TipContent, TipProvider, TipRoot, TipTrigger, Toaster, Toggle, Toolbar, ToolbarButton, ToolbarSeparator, Well, pointerScript, themeScript, trackPointer, useCommandShortcut, useTheme };

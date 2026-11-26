@@ -192,6 +192,7 @@ export {
   MenuSeparator,
   MenuGroup,
   MenuRadioGroup,
+  MenuRadioItem,
 } from "./components/menu";
 export {
   ContextMenu,

@@ -73,6 +73,31 @@ export const MenuCheckboxItem = React.forwardRef<
   );
 });
 
+/**
+ * A escolha ÚNICA dentro de um `MenuRadioGroup`. O grupo já era exportado sem
+ * ela, o que o deixava inútil: não havia com que preencher o grupo.
+ *
+ * Mesma marca do item de marcar — o que distingue os dois é a semântica que o
+ * Radix dá (um de cada vez contra vários), e é ela que o leitor de tela anuncia.
+ */
+export const MenuRadioItem = React.forwardRef<
+  React.ComponentRef<typeof DropdownMenuPrimitive.RadioItem>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
+>(function MenuRadioItem({ className, children, ...props }, ref) {
+  return (
+    <DropdownMenuPrimitive.RadioItem
+      ref={ref}
+      className={cn("voga-menu__item voga-menu__item--indent", className)}
+      {...props}
+    >
+      <DropdownMenuPrimitive.ItemIndicator className="voga-menu__mark">
+        <Icon as={Check} style={{ width: 15, height: 15 }} />
+      </DropdownMenuPrimitive.ItemIndicator>
+      {children}
+    </DropdownMenuPrimitive.RadioItem>
+  );
+});
+
 export function MenuLabel({
   className,
   ...props
