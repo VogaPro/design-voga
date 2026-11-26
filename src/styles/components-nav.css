@@ -148,7 +148,14 @@
   flex-direction: column;
   gap: var(--voga-space-4);
   box-sizing: border-box;
-  width: 240px;
+  /*
+   * A largura é um TOKEN, não um número cravado. O CSS deste pacote não está
+   * em camada, então `width: 240px` aqui vence qualquer `w-64` do Tailwind por
+   * mais específico que ele seja — e uma barra que recolhe (trilho de ícones)
+   * ficava impossível sem brigar com !important. Quem precisa de outra largura
+   * troca a variável, que é como o resto do sistema se ajusta.
+   */
+  width: var(--voga-sidebar-w, 240px);
   padding: var(--voga-space-3);
   background: var(--voga-side);
   border-right: 1px solid var(--voga-line);
